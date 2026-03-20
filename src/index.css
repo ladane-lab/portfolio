@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    @apply bg-[#0F172A] text-white font-sans overflow-x-hidden;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-white/5 backdrop-blur-xl border border-white/10;
+  }
+  
+  .glass-hover {
+    @apply transition-all duration-300 hover:bg-white/10 hover:border-white/20 hover:-translate-y-1;
+  }
+
+  .text-neon {
+    text-shadow: 0 0 10px rgba(79, 70, 229, 0.4), 0 0 20px rgba(34, 211, 238, 0.2);
+  }
+}
+
+@theme {
+  --color-primary: #4F46E5;
+  --color-accent: #22D3EE;
+  --font-sans: "Outfit", sans-serif;
+}
+
+.mesh-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  background: 
+    radial-gradient(at 0% 0%, hsla(217,100%,33%,0.1) 0, transparent 50%), 
+    radial-gradient(at 50% 0%, hsla(250,100%,33%,0.05) 0, transparent 50%),
+    radial-gradient(at 100% 0%, hsla(217,100%,33%,0.1) 0, transparent 50%),
+    radial-gradient(at 100% 100%, hsla(250,100%,33%,0.1) 0, transparent 50%),
+    radial-gradient(at 0% 100%, hsla(217,100%,33%,0.05) 0, transparent 50%);
+  filter: blur(100px);
+}
