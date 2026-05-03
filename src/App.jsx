@@ -1073,7 +1073,7 @@ const App = () => (
 
           <div className="flex gap-3 pt-5" style={{ borderTop: '1px solid var(--border)' }}>
             <a href="https://github.com/ladane-lab" target="_blank" rel="noopener noreferrer" className="social-icon" title="GitHub"><GitHubIcon size={17} /></a>
-            <a href="https://www.linkedin.com/in/jagannath-ladane-71a748284/" target="_blank" rel="noopener noreferrer" className="social-icon" title="LinkedIn"><LinkedInIcon size={17} /></a>
+            <a href="https://www.linkedin.com/in/jagannath-ladane/" target="_blank" rel="noopener noreferrer" className="social-icon" title="LinkedIn"><LinkedInIcon size={17} /></a>
             <a href="https://leetcode.com/u/ladane-lab/" target="_blank" rel="noopener noreferrer" className="social-icon" title="LeetCode"><LeetCodeIcon size={17} /></a>
             <a href="https://www.hackerrank.com/profile/ladanejagannath" target="_blank" rel="noopener noreferrer" className="social-icon" title="HackerRank"><HackerRankIcon size={17} /></a>
           </div>
@@ -1103,7 +1103,7 @@ const App = () => (
         <div className="flex gap-5">
           {[
             { href: "https://github.com/ladane-lab", icon: <GitHubIcon size={20} />, label: "GitHub" },
-            { href: "https://www.linkedin.com/in/jagannath-ladane-71a748284/", icon: <LinkedInIcon size={20} />, label: "LinkedIn" },
+            { href: "https://www.linkedin.com/in/jagannath-ladane/", icon: <LinkedInIcon size={20} />, label: "LinkedIn" },
             { href: "https://leetcode.com/u/ladane-lab/", icon: <LeetCodeIcon size={20} />, label: "LeetCode" },
             { href: "https://www.hackerrank.com/profile/ladanejagannath", icon: <HackerRankIcon size={20} />, label: "HackerRank" }
           ].map((link, idx) => (
