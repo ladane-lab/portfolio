@@ -5,3 +5,5 @@ import App from './App.jsx'
 createRoot(document.getElementById('root')).render(
     <App />
 )
+
+// Deployment Sync: 2026-05-03
