@@ -161,11 +161,11 @@ const EMAILJS_SERVICE_ID = 'service_ek4hx5f';  // ✅ fixed
 const EMAILJS_TEMPLATE_ID = 'template_k9umlch'; // ✅ set
 const EMAILJS_PUBLIC_KEY = 'kQrb7aYKz7KRJEZfE'; // ✅ set
 
-/* ── Backend URL ─────────────────────────────────────────
-   Set VITE_BACKEND_URL in .env for production deployment.
-   Falls back to localhost:3001 for local development.
+/* ── API Configuration ─────────────────────────────────────────
+   Points to /api/notify (Vercel Serverless Function).
+   Set VITE_BACKEND_URL in .env if your API is on a different domain.
    ─────────────────────────────────────────────────── */
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '';
 
 /* ── Contact Form (EmailJS) ───────────────────────────────── */
 const ContactForm = () => {
@@ -226,7 +226,7 @@ const ContactForm = () => {
         EMAILJS_PUBLIC_KEY,
       );
 
-      // 2️⃣  Fire WhatsApp notification via backend (non-blocking, API key stays server-side)
+      // 2️⃣  Fire Telegram notification via Serverless Function (non-blocking)
       fetch(`${BACKEND_URL}/api/notify`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
