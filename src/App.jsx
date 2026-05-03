@@ -546,8 +546,9 @@ const App = () => (
             </p>
 
             {/* CTA buttons */}
-            <div className="flex flex-wrap gap-4 mb-10">
+            <div className="flex flex-nowrap gap-2 md:gap-4 mb-10">
               <a href="#projects" className="primary-btn"
+                style={{ padding: '0.6rem 1rem', fontSize: '0.8rem' }}
                 onClick={(e) => {
                   e.preventDefault();
                   const el = document.getElementById('projects');
@@ -557,24 +558,25 @@ const App = () => (
                     window.scrollTo({ top: y, behavior: 'smooth' });
                   }
                 }}>
-                <Zap size={16} /> View Projects
+                <Zap size={14} /> <span className="whitespace-nowrap">View Projects</span>
               </a>
-              <a href="/resume.pdf" download="jagannath_ladane_resume.pdf" className="ghost-btn">
-                <Download size={15} /> Download Resume
+              <a href="/resume.pdf" download="jagannath_ladane_resume.pdf" className="ghost-btn"
+                style={{ padding: '0.6rem 1rem', fontSize: '0.8rem' }}>
+                <Download size={14} /> <span className="whitespace-nowrap">Download Resume</span>
               </a>
             </div>
 
             {/* inline stats with icons */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-2 md:gap-3">
               {[
                 { value: '200+', label: 'DSA Problems Solved', icon: <Code2 size={16} />, color: 'var(--accent)' },
                 { value: '5 ★', label: 'Java @ HackerRank', icon: <Star size={16} />, color: '#F59E0B' },
-                { value: '2+', label: 'Yrs Experience', icon: <Clock size={16} />, color: 'var(--success)' },
+                { value: '2+', label: 'Yrs Experience in Project Development', icon: <Clock size={16} />, color: 'var(--success)' },
               ].map(s => (
                 <div key={s.label} className="hero-stat">
                   <div className="flex justify-center mb-1" style={{ color: s.color }}>{s.icon}</div>
-                  <div className="text-xl font-black" style={{ color: s.color }}>{s.value}</div>
-                  <div className="text-[9px] uppercase tracking-wider mt-0.5" style={{ color: 'var(--text-secondary)' }}>{s.label}</div>
+                  <div className="text-lg md:text-xl font-black" style={{ color: s.color }}>{s.value}</div>
+                  <div className="text-[8px] md:text-[9px] uppercase tracking-wider mt-0.5 leading-tight" style={{ color: 'var(--text-secondary)' }}>{s.label}</div>
                 </div>
               ))}
             </div>
@@ -661,7 +663,7 @@ const App = () => (
 
         {/* Two column layout for bottom section */}
         <div className="w-full grid md:grid-cols-2 gap-8 items-start">
-          
+
           {/* Left: Skill highlights & CTA */}
           <div className="flex flex-col gap-6 justify-center">
             <div className="grid grid-cols-2 gap-3">

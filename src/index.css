@@ -261,13 +261,19 @@ body::before {
 /* ─── Inline hero stat mini cards ───────────────────────── */
 .hero-stat {
   text-align: center;
-  padding: 0.85rem 0.5rem;
+  padding: 0.6rem 0.35rem;
   border-radius: 14px;
   background: rgba(255,255,255,0.7);
   border: 1px solid var(--border);
   backdrop-filter: blur(6px);
   transition: all 0.25s ease;
   cursor: default;
+}
+
+@media (min-width: 768px) {
+  .hero-stat {
+    padding: 0.85rem 0.5rem;
+  }
 }
 .hero-stat:hover {
   transform: translateY(-3px);
