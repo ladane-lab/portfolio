@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import {
   Mail, Phone, Download,
   Code2, Cpu, ShieldCheck, Database,
   GraduationCap, ChevronRight, MessageSquare,
   Terminal, BrainCircuit, AppWindow, MapPin,
-  Trophy, Star, Clock, Zap, Layers, Globe
+  Trophy, Star, Clock, Zap, Layers, Globe,
+  Menu, X
 } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 import './index.css';
@@ -68,6 +69,7 @@ const TypewriterText = ({ texts }) => {
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -85,24 +87,27 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const navItems = ['About', 'Skills', 'Projects', 'Contact'];
+
   return (
     <nav style={{
       position: 'sticky', top: 0, zIndex: 50,
-      background: scrolled ? 'rgba(248,250,252,0.92)' : 'rgba(248,250,252,0.75)',
+      background: scrolled ? 'rgba(248,250,252,0.95)' : 'rgba(248,250,252,0.8)',
       backdropFilter: 'blur(20px)',
       WebkitBackdropFilter: 'blur(20px)',
       borderBottom: `1px solid ${scrolled ? 'rgba(226,232,240,0.9)' : 'rgba(226,232,240,0.4)'}`,
       boxShadow: scrolled ? '0 4px 24px rgba(15,23,42,0.08)' : 'none',
       transition: 'all 0.3s ease',
     }}>
-      <div className="max-w-6xl mx-auto px-8 py-3.5 flex items-center justify-between">
+      <div className="max-w-6xl mx-auto px-6 md:px-8 py-3.5 flex items-center justify-between">
         <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
           className="text-xl font-black" style={{ color: 'var(--text-primary)' }}>
           JL<span style={{ color: 'var(--accent)' }}>.</span>
         </motion.div>
 
+        {/* Desktop Menu */}
         <div className="hidden md:flex gap-7 items-center">
-          {['About', 'Skills', 'Projects', 'Contact'].map(item => {
+          {navItems.map(item => {
             const id = item.toLowerCase();
             const isActive = activeSection === id;
             return (
@@ -126,7 +131,63 @@ const Navbar = () => {
             HIRE ME
           </a>
         </div>
+
+        {/* Mobile Menu Toggle */}
+        <button
+          className="md:hidden p-2 rounded-lg transition-colors"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          style={{ color: 'var(--text-primary)', background: 'rgba(226,232,240,0.4)' }}
+          aria-label="Toggle menu"
+        >
+          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
       </div>
+
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            className="md:hidden overflow-hidden"
+            style={{ background: 'rgba(248,250,252,0.98)', borderBottom: '1px solid var(--border)' }}
+          >
+            <div className="flex flex-col gap-4 p-6">
+              {navItems.map(item => {
+                const id = item.toLowerCase();
+                const isActive = activeSection === id;
+                return (
+                  <a key={item} href={`#${id}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsMenuOpen(false);
+                      setTimeout(() => {
+                        const el = document.getElementById(id);
+                        if (el) {
+                          const yOffset = -80;
+                          const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                          window.scrollTo({ top: y, behavior: 'smooth' });
+                        }
+                      }, 300);
+                    }}
+                    className="text-lg font-bold transition-all duration-200"
+                    style={{ color: isActive ? 'var(--accent)' : 'var(--text-secondary)' }}>
+                    {item}
+                  </a>
+                );
+              })}
+              <a href="mailto:ladanejagannath@gmail.com?subject=Job Opportunity: Hiring Inquiry"
+                onClick={() => setIsMenuOpen(false)}
+                className="primary-btn w-full justify-center"
+                style={{ padding: '0.75rem', fontSize: '0.9rem', borderRadius: '10px' }}>
+                HIRE ME
+              </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 };
@@ -141,9 +202,9 @@ const Section = ({ id, title, children, alt = false }) => (
     viewport={{ once: true, margin: '-60px' }}
     style={{ background: alt ? 'rgba(255,255,255,0.55)' : 'transparent', backdropFilter: alt ? 'blur(6px)' : 'none' }}
   >
-    <div className="py-20 px-6 max-w-6xl mx-auto">
-      <div className="flex items-center gap-4 mb-12">
-        <h2 className="text-2xl md:text-3xl font-extrabold uppercase tracking-widest whitespace-nowrap"
+    <div className="py-16 md:py-24 px-6 md:px-8 max-w-6xl mx-auto">
+      <div className="flex items-center gap-4 mb-12 md:mb-16">
+        <h2 className="text-xl md:text-3xl font-extrabold uppercase tracking-widest whitespace-nowrap"
           style={{ color: 'var(--text-primary)' }}>
           {title}
         </h2>
@@ -275,7 +336,7 @@ const ContactForm = () => {
   });
 
   return (
-    <div className="p-8 rounded-2xl"
+    <div className="p-5 sm:p-8 rounded-2xl"
       style={{
         background: 'rgba(255,255,255,0.85)',
         border: '1px solid var(--border)',
@@ -445,24 +506,9 @@ const App = () => (
   <div style={{ color: 'var(--text-primary)' }} className="min-h-screen">
 
     {/* Background ambient orbs */}
-    <div className="bg-orb" style={{
-      width: 600, height: 600,
-      top: '-10%', left: '-10%',
-      background: 'radial-gradient(circle, rgba(37,99,235,0.08) 0%, transparent 70%)',
-      animationDelay: '0s',
-    }} />
-    <div className="bg-orb" style={{
-      width: 500, height: 500,
-      bottom: '10%', right: '-5%',
-      background: 'radial-gradient(circle, rgba(6,182,212,0.07) 0%, transparent 70%)',
-      animationDelay: '-6s',
-    }} />
-    <div className="bg-orb" style={{
-      width: 400, height: 400,
-      top: '40%', left: '30%',
-      background: 'radial-gradient(circle, rgba(99,102,241,0.05) 0%, transparent 70%)',
-      animationDelay: '-3s',
-    }} />
+    <div className="bg-orb bg-orb-1" />
+    <div className="bg-orb bg-orb-2" />
+    <div className="bg-orb bg-orb-3" />
 
     {/* ════ NAVBAR ════ */}
     <Navbar />
@@ -477,7 +523,7 @@ const App = () => (
 
 
             <h1 className="font-black leading-[1.05] mb-4"
-              style={{ fontFamily: '"Poppins", sans-serif', fontSize: 'clamp(2.6rem, 6vw, 4.2rem)', color: 'var(--text-primary)', letterSpacing: '-0.03em', whiteSpace: 'nowrap' }}>
+              style={{ fontFamily: '"Poppins", sans-serif', fontSize: 'clamp(1.4rem, 8.5vw, 4.2rem)', color: 'var(--text-primary)', letterSpacing: '-0.03em', whiteSpace: 'nowrap' }}>
               Jagannath <span className="name-gradient">Ladane</span>
             </h1>
 
@@ -501,7 +547,16 @@ const App = () => (
 
             {/* CTA buttons */}
             <div className="flex flex-wrap gap-4 mb-10">
-              <a href="#projects" className="primary-btn">
+              <a href="#projects" className="primary-btn"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const el = document.getElementById('projects');
+                  if (el) {
+                    const yOffset = -80;
+                    const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                    window.scrollTo({ top: y, behavior: 'smooth' });
+                  }
+                }}>
                 <Zap size={16} /> View Projects
               </a>
               <a href="/resume.pdf" download="jagannath_ladane_resume.pdf" className="ghost-btn">
@@ -510,7 +565,7 @@ const App = () => (
             </div>
 
             {/* inline stats with icons */}
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {[
                 { value: '200+', label: 'DSA Problems Solved', icon: <Code2 size={16} />, color: 'var(--accent)' },
                 { value: '5 ★', label: 'Java @ HackerRank', icon: <Star size={16} />, color: '#F59E0B' },
@@ -527,7 +582,7 @@ const App = () => (
 
           {/* RIGHT — photo */}
           <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.75, ease: [0.4, 0, 0.2, 1] }}
-            className="flex justify-center md:justify-end">
+            className="flex justify-center md:justify-end mt-8 md:mt-0">
             <div className="relative profile-float">
               {/* Animated spinning ring */}
               <div className="profile-ring-animate" />
@@ -540,9 +595,8 @@ const App = () => (
                 filter: 'blur(8px)',
               }} />
               {/* Image container */}
-              <div style={{
+              <div className="profile-image-container" style={{
                 position: 'relative', zIndex: 1,
-                width: 290, height: 290,
                 borderRadius: '50%', overflow: 'hidden',
                 border: '4px solid rgba(255,255,255,0.9)',
                 boxShadow:
@@ -762,7 +816,7 @@ const App = () => (
 
     {/* ════ PROJECTS ════ */}
     <Section id="projects" title="Featured Work" alt >
-      <div className="grid lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         {[
           {
             title: 'PeekSathi', badge: 'AI + Real Impact',

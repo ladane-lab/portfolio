@@ -23,7 +23,7 @@
 
 /* ─── Base ───────────────────────────────────────────────── */
 @layer base {
-  * { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; }
 
   body {
     background: linear-gradient(135deg, #f8fafc 0%, #eef4ff 50%, #f0f9ff 100%);
@@ -312,6 +312,18 @@ body::before {
   animation: float 5s ease-in-out infinite;
 }
 
+.profile-image-container {
+  width: 250px;
+  height: 250px;
+}
+
+@media (min-width: 768px) {
+  .profile-image-container {
+    width: 290px;
+    height: 290px;
+  }
+}
+
 .profile-ring-animate {
   position: absolute;
   inset: -5px;
@@ -416,4 +428,26 @@ body::before {
   pointer-events: none;
   z-index: -1;
   animation: orb-drift 12s ease-in-out infinite;
+}
+
+.bg-orb-1 { 
+  width: 300px; height: 300px; top: -5%; left: -5%; 
+  background: radial-gradient(circle, rgba(37,99,235,0.08) 0%, transparent 70%); 
+  animation-delay: 0s; 
+}
+.bg-orb-2 { 
+  width: 250px; height: 250px; bottom: 5%; right: -5%; 
+  background: radial-gradient(circle, rgba(6,182,212,0.07) 0%, transparent 70%); 
+  animation-delay: -6s; 
+}
+.bg-orb-3 { 
+  width: 200px; height: 200px; top: 40%; left: 10%; 
+  background: radial-gradient(circle, rgba(99,102,241,0.05) 0%, transparent 70%); 
+  animation-delay: -3s; 
+}
+
+@media (min-width: 768px) {
+  .bg-orb-1 { width: 600px; height: 600px; top: -10%; left: -10%; }
+  .bg-orb-2 { width: 500px; height: 500px; bottom: 10%; right: -5%; }
+  .bg-orb-3 { width: 400px; height: 400px; top: 40%; left: 30%; }
 }
