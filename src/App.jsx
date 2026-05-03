@@ -502,697 +502,840 @@ const ContactForm = () => {
   );
 };
 
-const App = () => (
-  <div style={{ color: 'var(--text-primary)' }} className="min-h-screen">
+/* ── PeekSathi Image Gallery Lightbox ──────────────────────── */
+const PEEKSATHI_IMAGES = Array.from({ length: 27 }, (_, i) => `/peeksathi/${27 - i}.jpeg`);
 
-    {/* Background ambient orbs */}
-    <div className="bg-orb bg-orb-1" />
-    <div className="bg-orb bg-orb-2" />
-    <div className="bg-orb bg-orb-3" />
+const ImageGallery = ({ onClose }) => {
+  const [activeIndex, setActiveIndex] = useState(null);
 
-    {/* ════ NAVBAR ════ */}
-    <Navbar />
+  // Close on ESC, navigate with arrow keys
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (e.key === 'Escape') {
+        if (activeIndex !== null) setActiveIndex(null);
+        else onClose();
+      }
+      if (activeIndex !== null) {
+        if (e.key === 'ArrowRight') setActiveIndex(i => Math.min(i + 1, PEEKSATHI_IMAGES.length - 1));
+        if (e.key === 'ArrowLeft') setActiveIndex(i => Math.max(i - 1, 0));
+      }
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [activeIndex, onClose]);
 
-    {/* ════ HERO ════ */}
-    <section>
-      <div className="max-w-6xl mx-auto px-6 py-16 md:py-24">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[100] flex flex-col"
+      style={{ background: 'rgba(10,15,30,0.97)', backdropFilter: 'blur(12px)' }}
+    >
+      {/* Header */}
+      <div className="flex items-center justify-between px-6 py-4 border-b" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
+        <div>
+          <p className="text-white font-black text-lg tracking-tight">PeekSathi <span style={{ color: 'var(--accent)' }}>Gallery</span></p>
+          <p className="text-xs" style={{ color: '#64748b' }}>{PEEKSATHI_IMAGES.length} screenshots</p>
+        </div>
+        <button onClick={onClose}
+          className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all"
+          style={{ background: 'rgba(255,255,255,0.07)', color: '#94a3b8', border: '1px solid rgba(255,255,255,0.1)' }}
+          onMouseOver={e => { e.currentTarget.style.background = 'rgba(239,68,68,0.15)'; e.currentTarget.style.color = '#f87171'; }}
+          onMouseOut={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.07)'; e.currentTarget.style.color = '#94a3b8'; }}
+        >
+          <X size={16} /> Close
+        </button>
+      </div>
 
-          {/* LEFT — text */}
-          <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.75, ease: [0.4, 0, 0.2, 1] }}>
-
-
-            <h1 className="font-black leading-[1.05] mb-4"
-              style={{ fontFamily: '"Poppins", sans-serif', fontSize: 'clamp(1.4rem, 8.5vw, 4.2rem)', color: 'var(--text-primary)', letterSpacing: '-0.03em', whiteSpace: 'nowrap' }}>
-              Jagannath <span className="name-gradient">Ladane</span>
-            </h1>
-
-            <p className="font-bold mb-2" style={{ fontSize: '1.05rem', color: 'var(--text-secondary)' }}>
-              MCA Student &amp; AI Developer
-            </p>
-
-            <div className="text-lg md:text-xl font-medium mb-5 h-8" style={{ color: 'var(--text-secondary)' }}>
-              <TypewriterText texts={[
-                'Building Intelligent Software Solutions',
-                'Secure System Design',
-                'AI-Powered Applications',
-                'Real-World Impact'
-              ]} />
-            </div>
-
-            <p className="text-sm leading-relaxed mb-8 max-w-md" style={{ color: 'var(--text-secondary)', lineHeight: '1.75' }}>
-              I build <span className="font-semibold" style={{ color: 'var(--text-primary)' }}>scalable, intelligent applications</span> that solve
-              real-world problems. Specialising in AI-driven products and security-first architecture. MCA at PCCOE Pune.
-            </p>
-
-            {/* CTA buttons */}
-            <div className="flex flex-nowrap gap-2 md:gap-4 mb-10">
-              <a href="#projects" className="primary-btn"
-                style={{ padding: '0.6rem 1rem', fontSize: '0.8rem' }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  const el = document.getElementById('projects');
-                  if (el) {
-                    const yOffset = -80;
-                    const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
-                    window.scrollTo({ top: y, behavior: 'smooth' });
-                  }
-                }}>
-                <Zap size={14} /> <span className="whitespace-nowrap">View Projects</span>
-              </a>
-              <a href="/resume.pdf" download="jagannath_ladane_resume.pdf" className="ghost-btn"
-                style={{ padding: '0.6rem 1rem', fontSize: '0.8rem' }}>
-                <Download size={14} /> <span className="whitespace-nowrap">Download Resume</span>
-              </a>
-            </div>
-
-            {/* inline stats with icons */}
-            <div className="grid grid-cols-3 gap-2 md:gap-3">
-              {[
-                { value: '200+', label: 'DSA Problems Solved', icon: <Code2 size={16} />, color: 'var(--accent)' },
-                { value: '5 ★', label: 'Java @ HackerRank', icon: <Star size={16} />, color: '#F59E0B' },
-                { value: '2+', label: 'Yrs Experience in Project Development', icon: <Clock size={16} />, color: 'var(--success)' },
-              ].map(s => (
-                <div key={s.label} className="hero-stat">
-                  <div className="flex justify-center mb-1" style={{ color: s.color }}>{s.icon}</div>
-                  <div className="text-lg md:text-xl font-black" style={{ color: s.color }}>{s.value}</div>
-                  <div className="text-[8px] md:text-[9px] uppercase tracking-wider mt-0.5 leading-tight" style={{ color: 'var(--text-secondary)' }}>{s.label}</div>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* RIGHT — photo */}
-          <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.75, ease: [0.4, 0, 0.2, 1] }}
-            className="flex justify-center md:justify-end mt-8 md:mt-0">
-            <div className="relative profile-float">
-              {/* Animated spinning ring */}
-              <div className="profile-ring-animate" />
-              {/* Static base ring glow */}
-              <div className="profile-ring-static" />
-              {/* Blurred glow behind */}
-              <div style={{
-                position: 'absolute', inset: '-12px', borderRadius: '50%', zIndex: 0,
-                background: 'radial-gradient(circle, rgba(37,99,235,0.18) 0%, transparent 70%)',
-                filter: 'blur(8px)',
-              }} />
-              {/* Image container */}
-              <div className="profile-image-container" style={{
-                position: 'relative', zIndex: 1,
-                borderRadius: '50%', overflow: 'hidden',
-                border: '4px solid rgba(255,255,255,0.9)',
-                boxShadow:
-                  '0 20px 50px rgba(37, 99, 235, 0.25), 0 0 0 8px rgba(37, 99, 235, 0.08)',
-              }}>
-                <img
-                  src="/profile.png"
-                  alt="Jagannath Ladane"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
-                  onError={e => {
-                    e.target.style.display = 'none';
-                    const p = e.target.parentNode;
-                    p.style.background = 'linear-gradient(135deg, #EFF6FF, #DBEAFE)';
-                    p.style.display = 'flex';
-                    p.style.alignItems = 'center';
-                    p.style.justifyContent = 'center';
-                    const initials = document.createElement('span');
-                    initials.textContent = 'JL';
-                    initials.style.cssText = 'font-size:4rem; font-weight:900; color:#2563EB; font-family:Outfit,sans-serif;';
-                    p.appendChild(initials);
-                  }}
-                />
+      {/* Thumbnail Grid */}
+      <div className="flex-1 overflow-y-auto p-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 max-w-6xl mx-auto">
+          {PEEKSATHI_IMAGES.map((src, idx) => (
+            <motion.div
+              key={idx}
+              onClick={() => setActiveIndex(idx)}
+              whileHover={{ scale: 1.03 }}
+              className="cursor-pointer rounded-xl overflow-hidden relative group"
+              style={{ border: '2px solid rgba(255,255,255,0.06)', aspectRatio: '9/16' }}
+            >
+              <img src={src} alt={`PeekSathi screenshot ${idx + 1}`}
+                className="w-full h-full object-cover"
+                onError={e => { e.target.style.display = 'none'; e.target.parentNode.style.background = 'rgba(37,99,235,0.08)'; }}
+              />
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                style={{ background: 'rgba(37,99,235,0.4)' }}>
+                <Layers size={24} color="#fff" />
               </div>
-              {/* Available badge */}
-              <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold"
-                style={{
-                  background: 'rgba(255,255,255,0.95)',
-                  border: '1px solid var(--border)',
-                  boxShadow: '0 6px 20px rgba(37,99,235,0.15)',
-                  zIndex: 2, whiteSpace: 'nowrap',
-                  backdropFilter: 'blur(8px)'
-                }}>
-                <span className="pulse-dot" style={{ color: 'var(--success)', fontSize: '1rem' }}>●</span>
-                <span style={{ color: 'var(--text-primary)' }}>Available for Work</span>
-              </div>
-            </div>
-          </motion.div>
+              <div className="absolute bottom-1.5 right-1.5 text-[10px] font-bold px-1.5 py-0.5 rounded-md"
+                style={{ background: 'rgba(0,0,0,0.55)', color: '#fff' }}>{idx + 1}</div>
+            </motion.div>
+          ))}
         </div>
       </div>
-    </section>
 
-    {/* ════ ABOUT ════ */}
-    <Section id="about" title="Professional Story" alt>
-      <div className="max-w-5xl mx-auto flex flex-col gap-12 items-center">
+      {/* Lightbox Overlay */}
+      <AnimatePresence>
+        {activeIndex !== null && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[110] flex items-center justify-center"
+            style={{ background: 'rgba(0,0,0,0.92)' }}
+            onClick={() => setActiveIndex(null)}
+          >
+            {/* Prev */}
+            <button
+              onClick={e => { e.stopPropagation(); setActiveIndex(i => Math.max(i - 1, 0)); }}
+              disabled={activeIndex === 0}
+              className="absolute left-4 z-10 p-3 rounded-full transition-all"
+              style={{ background: 'rgba(255,255,255,0.1)', color: '#fff', opacity: activeIndex === 0 ? 0.3 : 1 }}
+            >
+              <ChevronRight size={24} style={{ transform: 'rotate(180deg)' }} />
+            </button>
 
-        {/* Headline + description */}
-        <div className="text-center max-w-3xl flex flex-col items-center">
-          <p className="text-xl md:text-2xl leading-relaxed mb-6" style={{ color: 'var(--text-primary)', lineHeight: 1.6 }}>
-            I'm a <span className="font-bold" style={{ color: 'var(--accent)' }}>product-minded Software Engineer Aspirant</span> who
-            bridges the gap between cutting-edge AI and real human problems.
-          </p>
-          <p className="mb-8 leading-relaxed text-base" style={{ color: 'var(--text-secondary)', lineHeight: 1.8 }}>
-            Currently pursuing MCA at PCCOE, I specialise in AI-driven applications and security-first design with
-            a focus on scalability and exceptional user experience. From building intelligent farming assistants to
-            military-grade encrypted diary platforms — I architect solutions that matter.
-          </p>
-          <p className="text-sm italic font-medium px-6 py-3 rounded-full inline-block"
-            style={{ color: 'var(--accent)', background: 'rgba(37,99,235,0.05)', border: '1px solid rgba(37,99,235,0.15)' }}>
-            "I love building products that combine intelligence, security, and delightful user experiences."
-          </p>
-        </div>
+            {/* Image */}
+            <motion.img
+              key={activeIndex}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+              src={PEEKSATHI_IMAGES[activeIndex]}
+              alt={`PeekSathi ${activeIndex + 1}`}
+              className="max-h-[88vh] max-w-[90vw] object-contain rounded-2xl shadow-2xl"
+              onClick={e => e.stopPropagation()}
+            />
 
-        {/* Two column layout for bottom section */}
-        <div className="w-full grid md:grid-cols-2 gap-8 items-start">
+            {/* Next */}
+            <button
+              onClick={e => { e.stopPropagation(); setActiveIndex(i => Math.min(i + 1, PEEKSATHI_IMAGES.length - 1)); }}
+              disabled={activeIndex === PEEKSATHI_IMAGES.length - 1}
+              className="absolute right-4 z-10 p-3 rounded-full transition-all"
+              style={{ background: 'rgba(255,255,255,0.1)', color: '#fff', opacity: activeIndex === PEEKSATHI_IMAGES.length - 1 ? 0.3 : 1 }}
+            >
+              <ChevronRight size={24} />
+            </button>
 
-          {/* Left: Skill highlights & CTA */}
-          <div className="flex flex-col gap-6 justify-center">
-            <div className="grid grid-cols-2 gap-3">
-              {[
-                { label: 'AI & Machine Learning', icon: <BrainCircuit size={15} /> },
-                { label: 'Full-Stack Development', icon: <Globe size={15} /> },
-                { label: 'Security Engineering', icon: <ShieldCheck size={15} /> },
-                { label: 'Mobile Development', icon: <AppWindow size={15} /> },
-              ].map((item, i) => (
-                <div key={i} className="flex items-center gap-2.5 p-3 rounded-xl"
-                  style={{
-                    background: 'rgba(255,255,255,0.7)',
-                    border: '1px solid var(--border)',
-                    backdropFilter: 'blur(6px)',
-                    transition: 'all 0.25s ease',
-                    cursor: 'default',
-                  }}
-                  onMouseOver={e => {
-                    e.currentTarget.style.transform = 'translateY(-3px)';
-                    e.currentTarget.style.borderColor = 'var(--accent)';
-                    e.currentTarget.style.boxShadow = '0 8px 20px rgba(37,99,235,0.1)';
-                  }}
-                  onMouseOut={e => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.borderColor = 'var(--border)';
-                    e.currentTarget.style.boxShadow = 'none';
-                  }}
-                >
-                  <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
-                    style={{ background: '#EFF6FF', color: 'var(--accent)' }}>
-                    {item.icon}
-                  </div>
-                  <span className="text-xs font-semibold" style={{ color: 'var(--text-primary)' }}>{item.label}</span>
-                </div>
-              ))}
+            {/* Counter */}
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 px-4 py-2 rounded-full text-sm font-semibold"
+              style={{ background: 'rgba(0,0,0,0.6)', color: '#fff', backdropFilter: 'blur(8px)' }}>
+              {activeIndex + 1} / {PEEKSATHI_IMAGES.length}
             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+};
 
-            {/* Dual CTA */}
-            <div>
-              <p className="text-sm font-semibold mb-3" style={{ color: 'var(--text-secondary)' }}>
-                Ready to build something impactful?
+const App = () => {
+  const [showPeekSathiGallery, setShowPeekSathiGallery] = useState(false);
+
+  useEffect(() => {
+    document.body.style.overflow = showPeekSathiGallery ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [showPeekSathiGallery]);
+
+  return (
+    <div style={{ color: 'var(--text-primary)' }} className="min-h-screen">
+
+      {/* Background ambient orbs */}
+      <div className="bg-orb bg-orb-1" />
+      <div className="bg-orb bg-orb-2" />
+      <div className="bg-orb bg-orb-3" />
+
+      {/* ════ NAVBAR ════ */}
+      <Navbar />
+
+      {/* ════ HERO ════ */}
+      <section>
+        <div className="max-w-6xl mx-auto px-6 py-16 md:py-24">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+
+            {/* LEFT — text */}
+            <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.75, ease: [0.4, 0, 0.2, 1] }}>
+
+
+              <h1 className="font-black leading-[1.05] mb-4"
+                style={{ fontFamily: '"Poppins", sans-serif', fontSize: 'clamp(1.4rem, 8.5vw, 4.2rem)', color: 'var(--text-primary)', letterSpacing: '-0.03em', whiteSpace: 'nowrap' }}>
+                Jagannath <span className="name-gradient">Ladane</span>
+              </h1>
+
+              <p className="font-bold mb-2" style={{ fontSize: '1.05rem', color: 'var(--text-secondary)' }}>
+                MCA Student &amp; AI Developer
               </p>
-              <div className="flex flex-wrap gap-3">
-                <a href="/resume.pdf" download="jagannath_ladane_resume.pdf" className="primary-btn">
-                  <Download size={15} /> Download Resume
+
+              <div className="text-lg md:text-xl font-medium mb-5 h-8" style={{ color: 'var(--text-secondary)' }}>
+                <TypewriterText texts={[
+                  'Building Intelligent Software Solutions',
+                  'Secure System Design',
+                  'AI-Powered Applications',
+                  'Real-World Impact'
+                ]} />
+              </div>
+
+              <p className="text-sm leading-relaxed mb-8 max-w-md" style={{ color: 'var(--text-secondary)', lineHeight: '1.75' }}>
+                I build <span className="font-semibold" style={{ color: 'var(--text-primary)' }}>scalable, intelligent applications</span> that solve
+                real-world problems. Specialising in AI-driven products and security-first architecture. MCA at PCCOE Pune.
+              </p>
+
+              {/* CTA buttons */}
+              <div className="flex flex-nowrap gap-2 md:gap-4 mb-10">
+                <a href="#projects" className="primary-btn"
+                  style={{ padding: '0.6rem 1rem', fontSize: '0.8rem' }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const el = document.getElementById('projects');
+                    if (el) {
+                      const yOffset = -80;
+                      const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                      window.scrollTo({ top: y, behavior: 'smooth' });
+                    }
+                  }}>
+                  <Zap size={14} /> <span className="whitespace-nowrap">View Projects</span>
                 </a>
-                <a href="#contact" className="ghost-btn">
-                  <MessageSquare size={15} /> Contact Me
+                <a href="/resume.pdf" download="jagannath_ladane_resume.pdf" className="ghost-btn"
+                  style={{ padding: '0.6rem 1rem', fontSize: '0.8rem' }}>
+                  <Download size={14} /> <span className="whitespace-nowrap">Download Resume</span>
                 </a>
               </div>
-            </div>
+
+              {/* inline stats with icons */}
+              <div className="grid grid-cols-3 gap-2 md:gap-3">
+                {[
+                  { value: '200+', label: 'DSA Problems Solved', icon: <Code2 size={16} />, color: 'var(--accent)' },
+                  { value: '5 ★', label: 'Java @ HackerRank', icon: <Star size={16} />, color: '#F59E0B' },
+                  { value: '2+', label: 'Yrs Experience in Project Development', icon: <Clock size={16} />, color: 'var(--success)' },
+                ].map(s => (
+                  <div key={s.label} className="hero-stat">
+                    <div className="flex justify-center mb-1" style={{ color: s.color }}>{s.icon}</div>
+                    <div className="text-lg md:text-xl font-black" style={{ color: s.color }}>{s.value}</div>
+                    <div className="text-[8px] md:text-[9px] uppercase tracking-wider mt-0.5 leading-tight" style={{ color: 'var(--text-secondary)' }}>{s.label}</div>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* RIGHT — photo */}
+            <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.75, ease: [0.4, 0, 0.2, 1] }}
+              className="flex justify-center md:justify-end mt-8 md:mt-0">
+              <div className="relative profile-float">
+                {/* Animated spinning ring */}
+                <div className="profile-ring-animate" />
+                {/* Static base ring glow */}
+                <div className="profile-ring-static" />
+                {/* Blurred glow behind */}
+                <div style={{
+                  position: 'absolute', inset: '-12px', borderRadius: '50%', zIndex: 0,
+                  background: 'radial-gradient(circle, rgba(37,99,235,0.18) 0%, transparent 70%)',
+                  filter: 'blur(8px)',
+                }} />
+                {/* Image container */}
+                <div className="profile-image-container" style={{
+                  position: 'relative', zIndex: 1,
+                  borderRadius: '50%', overflow: 'hidden',
+                  border: '4px solid rgba(255,255,255,0.9)',
+                  boxShadow:
+                    '0 20px 50px rgba(37, 99, 235, 0.25), 0 0 0 8px rgba(37, 99, 235, 0.08)',
+                }}>
+                  <img
+                    src="/profile.png"
+                    alt="Jagannath Ladane"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
+                    onError={e => {
+                      e.target.style.display = 'none';
+                      const p = e.target.parentNode;
+                      p.style.background = 'linear-gradient(135deg, #EFF6FF, #DBEAFE)';
+                      p.style.display = 'flex';
+                      p.style.alignItems = 'center';
+                      p.style.justifyContent = 'center';
+                      const initials = document.createElement('span');
+                      initials.textContent = 'JL';
+                      initials.style.cssText = 'font-size:4rem; font-weight:900; color:#2563EB; font-family:Outfit,sans-serif;';
+                      p.appendChild(initials);
+                    }}
+                  />
+                </div>
+                {/* Available badge */}
+                <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold"
+                  style={{
+                    background: 'rgba(255,255,255,0.95)',
+                    border: '1px solid var(--border)',
+                    boxShadow: '0 6px 20px rgba(37,99,235,0.15)',
+                    zIndex: 2, whiteSpace: 'nowrap',
+                    backdropFilter: 'blur(8px)'
+                  }}>
+                  <span className="pulse-dot" style={{ color: 'var(--success)', fontSize: '1rem' }}>●</span>
+                  <span style={{ color: 'var(--text-primary)' }}>Available for Work</span>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* ════ ABOUT ════ */}
+      <Section id="about" title="Professional Story" alt>
+        <div className="max-w-5xl mx-auto flex flex-col gap-12 items-center">
+
+          {/* Headline + description */}
+          <div className="text-center max-w-3xl flex flex-col items-center">
+            <p className="text-xl md:text-2xl leading-relaxed mb-6" style={{ color: 'var(--text-primary)', lineHeight: 1.6 }}>
+              I'm a <span className="font-bold" style={{ color: 'var(--accent)' }}>product-minded Software Engineer Aspirant</span> who
+              bridges the gap between cutting-edge AI and real human problems.
+            </p>
+            <p className="mb-8 leading-relaxed text-base" style={{ color: 'var(--text-secondary)', lineHeight: 1.8 }}>
+              Currently pursuing MCA at PCCOE, I specialise in AI-driven applications and security-first design with
+              a focus on scalability and exceptional user experience. From building intelligent farming assistants to
+              military-grade encrypted diary platforms — I architect solutions that matter.
+            </p>
+            <p className="text-sm italic font-medium px-6 py-3 rounded-full inline-block"
+              style={{ color: 'var(--accent)', background: 'rgba(37,99,235,0.05)', border: '1px solid rgba(37,99,235,0.15)' }}>
+              "I love building products that combine intelligence, security, and delightful user experiences."
+            </p>
           </div>
 
-          {/* Right: Currently Building */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1, duration: 0.5 }}
-            viewport={{ once: true }}
-            className="p-8 rounded-3xl h-full flex flex-col justify-center"
-            style={{
-              background: 'linear-gradient(135deg, rgba(37,99,235,0.06) 0%, rgba(6,182,212,0.04) 100%)',
-              border: '1px solid rgba(37,99,235,0.18)',
-              backdropFilter: 'blur(8px)',
-            }}
-          >
-            <div className="flex items-center gap-4 mb-8">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center"
-                style={{ background: 'linear-gradient(135deg, #2563eb, #06B6D4)', color: '#fff' }}>
-                <Zap size={22} />
-              </div>
-              <div>
-                <p className="text-sm font-bold uppercase tracking-widest" style={{ color: 'var(--accent)' }}>Currently Building</p>
-                <p className="text-base" style={{ color: 'var(--text-secondary)' }}>Active focus areas</p>
-              </div>
-              <span className="ml-auto px-4 py-1.5 rounded-full text-xs font-bold uppercase hidden sm:block"
-                style={{ background: 'rgba(5,150,105,0.12)', color: 'var(--success)', border: '1px solid rgba(5,150,105,0.25)' }}>
-                In Progress
-              </span>
-            </div>
-            <ul className="space-y-6">
-              {[
-                { text: 'AI-Powered Applications', sub: 'ML inference + real-world deployment' },
-                { text: 'Secure Full-Stack Platforms', sub: 'End-to-end encrypted systems' },
-                { text: 'Scalable Cloud Solutions', sub: 'AWS + distributed architectures' },
-              ].map((item, i) => (
-                <li key={i} className="flex items-start gap-4">
-                  <span className="mt-0.5 w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-sm font-black"
-                    style={{ background: 'linear-gradient(135deg, #2563eb, #06B6D4)', color: '#fff' }}>
-                    {i + 1}
-                  </span>
-                  <div>
-                    <p className="text-base font-semibold mb-0.5" style={{ color: 'var(--text-primary)' }}>{item.text}</p>
-                    <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>{item.sub}</p>
+          {/* Two column layout for bottom section */}
+          <div className="w-full grid md:grid-cols-2 gap-8 items-start">
+
+            {/* Left: Skill highlights & CTA */}
+            <div className="flex flex-col gap-6 justify-center">
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  { label: 'AI & Machine Learning', icon: <BrainCircuit size={15} /> },
+                  { label: 'Full-Stack Development', icon: <Globe size={15} /> },
+                  { label: 'Security Engineering', icon: <ShieldCheck size={15} /> },
+                  { label: 'Mobile Development', icon: <AppWindow size={15} /> },
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center gap-2.5 p-3 rounded-xl"
+                    style={{
+                      background: 'rgba(255,255,255,0.7)',
+                      border: '1px solid var(--border)',
+                      backdropFilter: 'blur(6px)',
+                      transition: 'all 0.25s ease',
+                      cursor: 'default',
+                    }}
+                    onMouseOver={e => {
+                      e.currentTarget.style.transform = 'translateY(-3px)';
+                      e.currentTarget.style.borderColor = 'var(--accent)';
+                      e.currentTarget.style.boxShadow = '0 8px 20px rgba(37,99,235,0.1)';
+                    }}
+                    onMouseOut={e => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.borderColor = 'var(--border)';
+                      e.currentTarget.style.boxShadow = 'none';
+                    }}
+                  >
+                    <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
+                      style={{ background: '#EFF6FF', color: 'var(--accent)' }}>
+                      {item.icon}
+                    </div>
+                    <span className="text-xs font-semibold" style={{ color: 'var(--text-primary)' }}>{item.label}</span>
                   </div>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
+                ))}
+              </div>
+
+              {/* Dual CTA */}
+              <div>
+                <p className="text-sm font-semibold mb-3" style={{ color: 'var(--text-secondary)' }}>
+                  Ready to build something impactful?
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  <a href="/resume.pdf" download="jagannath_ladane_resume.pdf" className="primary-btn">
+                    <Download size={15} /> Download Resume
+                  </a>
+                  <a href="#contact" className="ghost-btn">
+                    <MessageSquare size={15} /> Contact Me
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Currently Building */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1, duration: 0.5 }}
+              viewport={{ once: true }}
+              className="p-8 rounded-3xl h-full flex flex-col justify-center"
+              style={{
+                background: 'linear-gradient(135deg, rgba(37,99,235,0.06) 0%, rgba(6,182,212,0.04) 100%)',
+                border: '1px solid rgba(37,99,235,0.18)',
+                backdropFilter: 'blur(8px)',
+              }}
+            >
+              <div className="flex items-center gap-4 mb-8">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center"
+                  style={{ background: 'linear-gradient(135deg, #2563eb, #06B6D4)', color: '#fff' }}>
+                  <Zap size={22} />
+                </div>
+                <div>
+                  <p className="text-sm font-bold uppercase tracking-widest" style={{ color: 'var(--accent)' }}>Currently Building</p>
+                  <p className="text-base" style={{ color: 'var(--text-secondary)' }}>Active focus areas</p>
+                </div>
+                <span className="ml-auto px-4 py-1.5 rounded-full text-xs font-bold uppercase hidden sm:block"
+                  style={{ background: 'rgba(5,150,105,0.12)', color: 'var(--success)', border: '1px solid rgba(5,150,105,0.25)' }}>
+                  In Progress
+                </span>
+              </div>
+              <ul className="space-y-6">
+                {[
+                  { text: 'AI-Powered Applications', sub: 'ML inference + real-world deployment' },
+                  { text: 'Secure Full-Stack Platforms', sub: 'End-to-end encrypted systems' },
+                  { text: 'Scalable Cloud Solutions', sub: 'AWS + distributed architectures' },
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-4">
+                    <span className="mt-0.5 w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-sm font-black"
+                      style={{ background: 'linear-gradient(135deg, #2563eb, #06B6D4)', color: '#fff' }}>
+                      {i + 1}
+                    </span>
+                    <div>
+                      <p className="text-base font-semibold mb-0.5" style={{ color: 'var(--text-primary)' }}>{item.text}</p>
+                      <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>{item.sub}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          </div>
         </div>
-      </div>
-    </Section>
+      </Section>
 
-    {/* ════ SKILLS ════ */}
-    <Section id="skills" title="Technical Arsenal" >
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-        {[
-          { title: 'Programming Languages', items: ['Java', 'JavaScript', 'TypeScript', 'SQL'], icon: <Code2 size={18} />, gradient: 'linear-gradient(135deg, #EFF6FF, #DBEAFE)' },
-          { title: 'Frontend', items: ['React', 'React Native', 'Expo', 'Tailwind CSS', 'HTML', 'CSS'], icon: <AppWindow size={18} />, gradient: 'linear-gradient(135deg, #F0FDF4, #DCFCE7)' },
-          { title: 'Backend', items: ['Node.js', 'Express.js', 'REST APIs'], icon: <Cpu size={18} />, gradient: 'linear-gradient(135deg, #FFF7ED, #FED7AA)' },
-          { title: 'Database', items: ['PostgreSQL', 'Firebase', 'PHPmyAdmin'], icon: <Database size={18} />, gradient: 'linear-gradient(135deg, #F5F3FF, #EDE9FE)' },
-          { title: 'Cloud', items: ['AWS S3'], icon: <Globe size={18} />, gradient: 'linear-gradient(135deg, #F0FDFA, #CCFBF1)' },
-          { title: 'Security', items: ['AES-256-GCM', 'bcrypt', 'JWT Auth'], icon: <ShieldCheck size={18} />, gradient: 'linear-gradient(135deg, #FFF1F2, #FFE4E6)' },
-          { title: 'AI & APIs', items: ['OpenAI API', 'Gemini API', 'Hugging Face', 'Judge API'], icon: <BrainCircuit size={18} />, gradient: 'linear-gradient(135deg, #EEF2FF, #E0E7FF)' },
-          { title: 'Tools', items: ['Git', 'GitHub', 'VS Code', 'Android Studio', 'Vite'], icon: <Terminal size={18} />, gradient: 'linear-gradient(135deg, #FEFCE8, #FEF08A)' },
-        ].map((cat, i) => (
-          <motion.div key={i}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.08, duration: 0.5 }}
-            viewport={{ once: true }}
-            whileHover={{ y: -5 }}
-            className="p-6 rounded-2xl"
-            style={{
-              background: 'rgba(255,255,255,0.8)',
-              border: '1px solid var(--border)',
-              boxShadow: '0 2px 14px var(--shadow)',
-              transition: 'border-color 0.25s, box-shadow 0.25s',
-              backdropFilter: 'blur(8px)',
-            }}
-            onMouseOver={e => {
-              e.currentTarget.style.borderColor = 'var(--accent)';
-              e.currentTarget.style.boxShadow = '0 12px 36px rgba(37,99,235,0.14)';
-            }}
-            onMouseOut={e => {
-              e.currentTarget.style.borderColor = 'var(--border)';
-              e.currentTarget.style.boxShadow = '0 2px 14px var(--shadow)';
-            }}
-          >
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
-              style={{ background: cat.gradient, color: 'var(--accent)' }}>
-              {cat.icon}
-            </div>
-            <h3 className="text-sm font-bold mb-3" style={{ color: 'var(--text-primary)' }}>{cat.title}</h3>
-            <div className="flex flex-wrap gap-2">
-              {cat.items.map(skill => <span key={skill} className="skill-badge">{skill}</span>)}
-            </div>
-          </motion.div>
-        ))}
-      </div>
-    </Section>
-
-    {/* ════ PROJECTS ════ */}
-    <Section id="projects" title="Featured Work" alt >
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        {[
-          {
-            title: 'PeekSathi', badge: 'AI + Real Impact',
-            image: '/peeksathi.png',
-            imageFit: 'contain',
-            desc: 'AI-powered farming assistant detecting crop diseases from images, with treatment plans in Marathi & English.',
-            bullets: ['Integrated OpenAI & Gemini for diagnosis', 'Multi-lingual treatment plans', 'Persistent crop history tracking'],
-            tags: ['React Native', 'Expo', 'Firebase'],
-          },
-          {
-            title: 'DailyDiary.in', badge: 'Security-First',
-            icon: <ShieldCheck size={60} />, iconBg: 'linear-gradient(135deg, #F0FDF4, #DCFCE7)', iconColor: 'var(--success)',
-            desc: 'Secure digital journaling platform with privacy-first architecture using military-grade encryption.',
-            bullets: ['AES-256-GCM Encryption', 'AWS S3 Secure Storage', 'UUID Protected Schema'],
-            tags: ['Node.js', 'Postgres', 'Bcrypt'],
-          },
-          {
-            title: 'Contest Generator', badge: 'DSA Tooling',
-            image: '/contest-gen.png',
-            url: 'https://contest-generator-one.vercel.app/',
-            desc: 'Web app for generating custom DSA contests and competitive programming rounds with custom problem selection and live leaderboard.',
-            bullets: [],
-            tags: ['TypeScript', 'React', 'Vite'],
-          },
-          {
-            title: 'Library Catalogue', badge: 'Backend System',
-            image: '/library.png',
-            desc: 'Robust PHP-based system for managing and cataloguing library resources with advanced search and filtering.',
-            bullets: [],
-            tags: ['PHP', 'MySQL', 'HTML/CSS'],
-          },
-        ].map((p, i) => {
-          const CardComponent = p.url ? motion.a : motion.div;
-          return (
-            <CardComponent
-              key={i}
-              href={p.url}
-              target={p.url ? "_blank" : undefined}
-              rel={p.url ? "noopener noreferrer" : undefined}
+      {/* ════ SKILLS ════ */}
+      <Section id="skills" title="Technical Arsenal" >
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+          {[
+            { title: 'Programming Languages', items: ['Java', 'JavaScript', 'TypeScript', 'SQL'], icon: <Code2 size={18} />, gradient: 'linear-gradient(135deg, #EFF6FF, #DBEAFE)' },
+            { title: 'Frontend', items: ['React', 'React Native', 'Expo', 'Tailwind CSS', 'HTML', 'CSS'], icon: <AppWindow size={18} />, gradient: 'linear-gradient(135deg, #F0FDF4, #DCFCE7)' },
+            { title: 'Backend', items: ['Node.js', 'Express.js', 'REST APIs'], icon: <Cpu size={18} />, gradient: 'linear-gradient(135deg, #FFF7ED, #FED7AA)' },
+            { title: 'Database', items: ['PostgreSQL', 'Firebase', 'PHPmyAdmin'], icon: <Database size={18} />, gradient: 'linear-gradient(135deg, #F5F3FF, #EDE9FE)' },
+            { title: 'Cloud', items: ['AWS S3'], icon: <Globe size={18} />, gradient: 'linear-gradient(135deg, #F0FDFA, #CCFBF1)' },
+            { title: 'Security', items: ['AES-256-GCM', 'bcrypt', 'JWT Auth'], icon: <ShieldCheck size={18} />, gradient: 'linear-gradient(135deg, #FFF1F2, #FFE4E6)' },
+            { title: 'AI & APIs', items: ['OpenAI API', 'Gemini API', 'Hugging Face', 'Judge API'], icon: <BrainCircuit size={18} />, gradient: 'linear-gradient(135deg, #EEF2FF, #E0E7FF)' },
+            { title: 'Tools', items: ['Git', 'GitHub', 'VS Code', 'Android Studio', 'Vite'], icon: <Terminal size={18} />, gradient: 'linear-gradient(135deg, #FEFCE8, #FEF08A)' },
+          ].map((cat, i) => (
+            <motion.div key={i}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1, duration: 0.5 }}
+              transition={{ delay: i * 0.08, duration: 0.5 }}
               viewport={{ once: true }}
               whileHover={{ y: -5 }}
-              className={`rounded-2xl overflow-hidden ${p.url ? 'cursor-pointer' : ''}`}
+              className="p-6 rounded-2xl"
               style={{
-                background: 'rgba(255,255,255,0.85)',
+                background: 'rgba(255,255,255,0.8)',
                 border: '1px solid var(--border)',
-                boxShadow: '0 2px 16px var(--shadow)',
-                transition: 'all 0.3s cubic-bezier(0.4,0,0.2,1)',
+                boxShadow: '0 2px 14px var(--shadow)',
+                transition: 'border-color 0.25s, box-shadow 0.25s',
                 backdropFilter: 'blur(8px)',
               }}
               onMouseOver={e => {
                 e.currentTarget.style.borderColor = 'var(--accent)';
-                e.currentTarget.style.boxShadow = '0 16px 48px rgba(37,99,235,0.16)';
+                e.currentTarget.style.boxShadow = '0 12px 36px rgba(37,99,235,0.14)';
               }}
               onMouseOut={e => {
                 e.currentTarget.style.borderColor = 'var(--border)';
-                e.currentTarget.style.boxShadow = '0 2px 16px var(--shadow)';
+                e.currentTarget.style.boxShadow = '0 2px 14px var(--shadow)';
               }}
             >
-              {p.image ? (
-                <div className="h-56 w-full border-b border-gray-100/10 flex items-center justify-center p-5" style={{ background: p.iconBg || '#f8fafc' }}>
-                  <img
-                    src={p.image}
-                    alt={p.title}
-                    className={`w-full h-full ${p.imageFit === 'contain' ? 'object-contain object-center mix-blend-multiply scale-110' : 'object-cover object-top rounded-lg shadow-[0_4px_20px_rgba(0,0,0,0.08)] border border-black/5'}`}
-                  />
-                </div>
-              ) : (
-                <div className="py-10 flex items-center justify-center" style={{ background: p.iconBg }}>
-                  <span style={{ color: p.iconColor, opacity: 0.4 }}>{p.icon}</span>
-                </div>
-              )}
-              <div className="p-6">
-                <span className="tag mb-3 inline-block">{p.badge}</span>
-                <h3 className="text-xl font-black mb-2" style={{ color: 'var(--text-primary)' }}>{p.title}</h3>
-                <p className="text-sm leading-relaxed mb-4" style={{ color: 'var(--text-secondary)', lineHeight: 1.7 }}>{p.desc}</p>
-                {p.bullets.length > 0 && (
-                  <ul className="space-y-1.5 mb-4 text-sm" style={{ color: 'var(--text-secondary)' }}>
-                    {p.bullets.map(b => (
-                      <li key={b} className="flex gap-2 items-center">
-                        <ChevronRight size={12} style={{ color: 'var(--accent)', flexShrink: 0 }} />{b}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-                <div className="flex gap-2 flex-wrap">
-                  {p.tags.map(t => <span key={t} className="tag">{t}</span>)}
-                </div>
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
+                style={{ background: cat.gradient, color: 'var(--accent)' }}>
+                {cat.icon}
               </div>
-            </CardComponent>
-          )
-        })}
-
-        {/* ════ Personal Portfolio — full width ════ */}
-        <motion.a
-          href="#"
-          onClick={(e) => {
-            e.preventDefault();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }}
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          viewport={{ once: true }}
-          whileHover={{ y: -4 }}
-          className="lg:col-span-2 rounded-2xl overflow-hidden relative cursor-pointer block"
-          style={{
-            background: 'rgba(255,255,255,0.85)',
-            border: '1px solid var(--border)',
-            boxShadow: '0 2px 16px var(--shadow)',
-            transition: 'all 0.3s cubic-bezier(0.4,0,0.2,1)',
-            backdropFilter: 'blur(8px)',
-          }}
-          onMouseOver={e => {
-            e.currentTarget.style.borderColor = 'var(--accent)';
-            e.currentTarget.style.boxShadow = '0 16px 48px rgba(37,99,235,0.16)';
-          }}
-          onMouseOut={e => {
-            e.currentTarget.style.borderColor = 'var(--border)';
-            e.currentTarget.style.boxShadow = '0 2px 16px var(--shadow)';
-          }}
-        >
-          <div className="flex flex-col md:flex-row h-full">
-            <div className="md:w-1/2 p-6 md:p-10 flex items-center justify-center border-b md:border-b-0 md:border-r border-gray-100/10"
-              style={{ background: 'linear-gradient(135deg, #F5F3FF, #EDE9FE)' }}>
-              <img src="/portfolio-thumb.png" alt="Portfolio UI" className="w-full h-full object-cover object-left-top rounded-xl shadow-[0_8px_30px_rgba(139,92,246,0.15)] border border-black/5" />
-            </div>
-            <div className="p-8 md:w-1/2 flex flex-col justify-center">
-              <span className="tag mb-4 inline-block self-start" style={{ background: 'rgba(139,92,246,0.15)', color: '#8b5cf6' }}>Frontend & UI/UX</span>
-              <h3 className="text-2xl font-black mb-3" style={{ color: 'var(--text-primary)' }}>
-                Personal Portfolio
-              </h3>
-              <p className="text-sm leading-relaxed mb-6" style={{ color: 'var(--text-secondary)', lineHeight: 1.8 }}>
-                A highly-optimized, modern developer portfolio built to showcase technical expertise. Features premium styling with Tailwind CSS,
-                fluid interactive animations with Framer Motion, and a secure serverless contact pipeline integrated directly with Telegram.
-              </p>
-              <div className="flex gap-2 flex-wrap mb-4">
-                <span className="tag" style={{ background: 'transparent', border: '1px solid var(--border)' }}>React</span>
-                <span className="tag" style={{ background: 'transparent', border: '1px solid var(--border)' }}>Tailwind CSS</span>
-                <span className="tag" style={{ background: 'transparent', border: '1px solid var(--border)' }}>Framer Motion</span>
-                <span className="tag" style={{ background: 'transparent', border: '1px solid var(--border)' }}>Node.js</span>
+              <h3 className="text-sm font-bold mb-3" style={{ color: 'var(--text-primary)' }}>{cat.title}</h3>
+              <div className="flex flex-wrap gap-2">
+                {cat.items.map(skill => <span key={skill} className="skill-badge">{skill}</span>)}
               </div>
-            </div>
-          </div>
-        </motion.a>
-
-        {/* CRM — full width */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          viewport={{ once: true }}
-          whileHover={{ y: -4 }}
-          className="lg:col-span-2 rounded-2xl overflow-hidden"
-          style={{
-            background: 'rgba(255,255,255,0.85)',
-            border: '1px solid var(--border)',
-            boxShadow: '0 2px 16px var(--shadow)',
-            transition: 'all 0.3s cubic-bezier(0.4,0,0.2,1)',
-            backdropFilter: 'blur(8px)',
-          }}
-          onMouseOver={e => {
-            e.currentTarget.style.borderColor = 'var(--accent)';
-            e.currentTarget.style.boxShadow = '0 16px 48px rgba(37,99,235,0.16)';
-          }}
-          onMouseOut={e => {
-            e.currentTarget.style.borderColor = 'var(--border)';
-            e.currentTarget.style.boxShadow = '0 2px 16px var(--shadow)';
-          }}
-        >
-          <div className="flex flex-col md:flex-row h-full">
-            <div className="md:w-1/2 p-6 md:p-10 flex items-center justify-center border-b md:border-b-0 md:border-r border-gray-100/10"
-              style={{ background: 'linear-gradient(135deg, #EFF6FF, #DBEAFE)' }}>
-              <img src="/crm.png" alt="CRM Dashboard" className="w-full h-full object-cover object-left-top rounded-xl shadow-[0_8px_30px_rgba(37,99,235,0.15)] border border-black/5" />
-            </div>
-            <div className="p-8 md:w-1/2 flex flex-col justify-center">
-              <span className="tag mb-4 inline-block">Corporate Solution</span>
-              <h3 className="text-2xl font-black mb-3" style={{ color: 'var(--text-primary)' }}>
-                Customer Relationship Website (CRM)
-              </h3>
-              <p className="text-sm leading-relaxed mb-5" style={{ color: 'var(--text-secondary)', lineHeight: 1.75 }}>
-                High-performance CRM platform to streamline customer management, sales workflows, and business analytics with a clean, modern UI.
-              </p>
-              <div className="flex gap-2 flex-wrap">
-                <span className="tag">HTML5</span>
-                <span className="tag">Tailwind</span>
-                <span className="tag">JavaScript</span>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-      </div>
-    </Section>
-
-    {/* ════ ACHIEVEMENTS ════ */}
-    <Section id="achievements" title="Success Metrics" >
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {[
-          {
-            label: 'LeetCode Solved Problems', value: '200+', sub: 'Medium / Hard Focus',
-            color: 'var(--accent)', icon: <LeetCodeIcon size={28} />,
-            glow: 'rgba(37,99,235,0.12)',
-          },
-          {
-            label: 'Java Rating', value: '5 ★', sub: 'Gold Badge @ HackerRank',
-            color: '#F59E0B', icon: <HackerRankIcon size={28} />,
-            glow: 'rgba(245,158,11,0.12)',
-          },
-          {
-            label: 'SQL Rating', value: '3 ★', sub: 'Silver Badge @ HackerRank',
-            color: 'var(--success)', icon: <Terminal size={28} />,
-            glow: 'rgba(5,150,105,0.12)',
-          },
-        ].map((s, i) => (
-          <motion.div key={i}
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ delay: i * 0.1, duration: 0.5 }}
-            viewport={{ once: true }}
-            className="stat-card">
-            <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5"
-              style={{ background: `radial-gradient(circle, ${s.glow}, transparent)`, color: s.color, border: `1px solid ${s.glow.replace('0.12', '0.3')}` }}>
-              {s.icon}
-            </div>
-            <div className="text-[11px] uppercase tracking-widest mb-3" style={{ color: 'var(--text-secondary)' }}>{s.label}</div>
-            <div className="text-5xl font-black mb-2" style={{ color: s.color }}>{s.value}</div>
-            <div className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>{s.sub}</div>
-          </motion.div>
-        ))}
-      </div>
-    </Section>
-
-    {/* ════ EDUCATION ════ */}
-    <Section id="education" title="Education" alt >
-      <div className="grid md:grid-cols-2 gap-5">
-        {[
-          { deg: 'Master of Computer Applications', period: 'Pimpri Chinchwad College of Engineering Pune · 2025 – 2027', grade: 'SGPA: 8.2', primary: true },
-          { deg: 'B.Sc Computer Science', period: 'MGMs College of CS And IT Nanded · 2021–2024', grade: 'CGPA: 8.22', primary: false },
-          { deg: 'HSC', period: 'SSGM College Loha · 2020-2021', grade: 'Percentage: 81.17%', primary: false },
-          { deg: 'SSC', period: 'Prataprao Patil Madhyamik Vidyalay Harsad Pati · 2018-2019', grade: 'Percentage: 70.80%', primary: false },
-        ].map((e, i) => (
-          <motion.div key={i}
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.12, duration: 0.5 }}
-            viewport={{ once: true }}
-            className="p-7 rounded-2xl flex items-start gap-5"
-            style={{
-              background: 'rgba(255,255,255,0.8)',
-              border: '1px solid var(--border)',
-              boxShadow: '0 2px 12px var(--shadow)',
-              backdropFilter: 'blur(8px)',
-              transition: 'all 0.25s ease',
-            }}
-            onMouseOver={ev => {
-              ev.currentTarget.style.borderColor = 'var(--accent)';
-              ev.currentTarget.style.transform = 'translateY(-3px)';
-              ev.currentTarget.style.boxShadow = '0 12px 32px rgba(37,99,235,0.12)';
-            }}
-            onMouseOut={ev => {
-              ev.currentTarget.style.borderColor = 'var(--border)';
-              ev.currentTarget.style.transform = 'translateY(0)';
-              ev.currentTarget.style.boxShadow = '0 2px 12px var(--shadow)';
-            }}
-          >
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
-              style={{ background: e.primary ? 'linear-gradient(135deg, #EFF6FF, #DBEAFE)' : 'var(--bg-primary)', color: e.primary ? 'var(--accent)' : 'var(--text-secondary)' }}>
-              <GraduationCap size={24} />
-            </div>
-            <div>
-              <h3 className="font-bold mb-1" style={{ color: 'var(--text-primary)' }}>{e.deg}</h3>
-              <p className="text-sm mb-3" style={{ color: e.primary ? 'var(--accent)' : 'var(--text-secondary)' }}>{e.period}</p>
-              <span className="tag">{e.grade}</span>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-    </Section>
-
-    {/* ════ CONTACT ════ */}
-    <Section id="contact" title="Get In Touch" >
-      <div className="grid lg:grid-cols-2 gap-12">
-        <div>
-          <h3 className="text-2xl font-black mb-4 leading-snug" style={{ color: 'var(--text-primary)' }}>
-            Let's build something <span style={{ color: 'var(--accent)' }}>extraordinary</span>.
-          </h3>
-          <p className="text-sm mb-8 leading-relaxed" style={{ color: 'var(--text-secondary)', lineHeight: 1.8 }}>
-            Open to roles in AI integration, secure system design, and product-focused software engineering.
-            Let's connect and create intelligent solutions together.
-          </p>
-
-          <div className="space-y-4 mb-8">
-            {[
-              { icon: <Mail size={16} />, label: 'Email', val: 'ladanejagannath@gmail.com' },
-              { icon: <Phone size={16} />, label: 'Phone', val: '+91 9022301782' },
-            ].map(c => (
-              <div key={c.label} className="flex items-center gap-4">
-                <div className="social-icon" style={{ width: 44, height: 44, borderRadius: 10 }}>{c.icon}</div>
-                <div>
-                  <div className="text-[10px] uppercase tracking-wider mb-0.5" style={{ color: 'var(--text-secondary)' }}>{c.label}</div>
-                  <div className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>{c.val}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="flex gap-3 pt-5" style={{ borderTop: '1px solid var(--border)' }}>
-            <a href="https://github.com/ladane-lab" target="_blank" rel="noopener noreferrer" className="social-icon" title="GitHub"><GitHubIcon size={17} /></a>
-            <a href="https://www.linkedin.com/in/jagannath-ladane/" target="_blank" rel="noopener noreferrer" className="social-icon" title="LinkedIn"><LinkedInIcon size={17} /></a>
-            <a href="https://leetcode.com/u/ladane-lab/" target="_blank" rel="noopener noreferrer" className="social-icon" title="LeetCode"><LeetCodeIcon size={17} /></a>
-            <a href="https://www.hackerrank.com/profile/ladanejagannath" target="_blank" rel="noopener noreferrer" className="social-icon" title="HackerRank"><HackerRankIcon size={17} /></a>
-          </div>
-        </div>
-
-        <ContactForm />
-      </div>
-    </Section>
-
-    {/* ════ FOOTER ════ */}
-    <footer style={{
-      background: 'linear-gradient(to bottom, #0f172a, #020617)',
-      color: '#94a3b8',
-      borderTop: '1px solid rgba(37,99,235,0.15)',
-      boxShadow: '0 -10px 40px rgba(0,0,0,0.1)'
-    }} className="py-16 px-6 relative overflow-hidden" >
-      {/* Decorative top glow */}
-      < div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-[1px]" style={{ background: 'linear-gradient(90deg, transparent, var(--accent), transparent)', opacity: 0.5 }} />
-
-      < div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 relative z-10" >
-        <div className="text-center md:text-left">
-          <div className="text-3xl font-black text-white mb-2 tracking-tight">
-            JL<span style={{ color: 'var(--accent)' }}>.</span>
-          </div>
-          <div className="text-sm font-medium" style={{ color: '#cbd5e1' }}>MCA Student & AI Developer</div>
-        </div>
-        <div className="flex gap-5">
-          {[
-            { href: "https://github.com/ladane-lab", icon: <GitHubIcon size={20} />, label: "GitHub" },
-            { href: "https://www.linkedin.com/in/jagannath-ladane/", icon: <LinkedInIcon size={20} />, label: "LinkedIn" },
-            { href: "https://leetcode.com/u/ladane-lab/", icon: <LeetCodeIcon size={20} />, label: "LeetCode" },
-            { href: "https://www.hackerrank.com/profile/ladanejagannath", icon: <HackerRankIcon size={20} />, label: "HackerRank" }
-          ].map((link, idx) => (
-            <a key={idx} href={link.href} target="_blank" rel="noopener noreferrer"
-              className="footer-social-icon" title={link.label}
-              style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                width: 44, height: 44, borderRadius: '50%',
-                background: 'rgba(255,255,255,0.05)', color: '#94a3b8',
-                transition: 'all 0.3s ease'
-              }}
-              onMouseOver={e => {
-                e.currentTarget.style.background = 'var(--accent)';
-                e.currentTarget.style.color = '#ffffff';
-                e.currentTarget.style.boxShadow = '0 0 20px rgba(37,99,235,0.5)';
-                e.currentTarget.style.transform = 'translateY(-3px)';
-              }}
-              onMouseOut={e => {
-                e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
-                e.currentTarget.style.color = '#94a3b8';
-                e.currentTarget.style.boxShadow = 'none';
-                e.currentTarget.style.transform = 'translateY(0)';
-              }}
-            >
-              {link.icon}
-            </a>
+            </motion.div>
           ))}
         </div>
-        <div className="text-xs font-bold uppercase tracking-widest" style={{ color: '#64748b' }}>© 2026 Jagannath Ladane</div>
-      </div>
-    </footer>
-  </div>
-);
+      </Section>
+
+      {/* ════ PROJECTS ════ */}
+      <Section id="projects" title="Featured Work" alt >
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {[
+            {
+              title: 'PeekSathi', badge: 'AI + Real Impact',
+              image: '/peeksathi.png',
+              imageFit: 'contain',
+              galleryAction: () => setShowPeekSathiGallery(true),
+              desc: 'AI-powered farming assistant detecting crop diseases from images, with treatment plans in Marathi & English.',
+              bullets: ['Integrated OpenAI & Gemini for diagnosis', 'Multi-lingual treatment plans', 'Persistent crop history tracking'],
+              tags: ['React Native', 'Expo', 'Firebase'],
+            },
+            {
+              title: 'DailyDiary.in', badge: 'Security-First',
+              icon: <ShieldCheck size={60} />, iconBg: 'linear-gradient(135deg, #F0FDF4, #DCFCE7)', iconColor: 'var(--success)',
+              desc: 'Secure digital journaling platform with privacy-first architecture using military-grade encryption.',
+              bullets: ['AES-256-GCM Encryption', 'AWS S3 Secure Storage', 'UUID Protected Schema'],
+              tags: ['Node.js', 'Postgres', 'Bcrypt'],
+            },
+            {
+              title: 'Contest Generator', badge: 'DSA Tooling',
+              image: '/contest-gen.png',
+              url: 'https://contest-generator-one.vercel.app/',
+              desc: 'Web app for generating custom DSA contests and competitive programming rounds with custom problem selection and live leaderboard.',
+              bullets: [],
+              tags: ['TypeScript', 'React', 'Vite'],
+            },
+            {
+              title: 'Library Catalogue', badge: 'Backend System',
+              image: '/library.png',
+              desc: 'Robust PHP-based system for managing and cataloguing library resources with advanced search and filtering.',
+              bullets: [],
+              tags: ['PHP', 'MySQL', 'HTML/CSS'],
+            },
+          ].map((p, i) => {
+            const CardComponent = (p.url || p.galleryAction) ? motion.div : motion.div;
+            return (
+              <motion.div
+                key={i}
+                onClick={p.galleryAction || (p.url ? () => window.open(p.url, '_blank') : undefined)}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1, duration: 0.5 }}
+                viewport={{ once: true }}
+                whileHover={{ y: -5 }}
+                className={`rounded-2xl overflow-hidden ${(p.url || p.galleryAction) ? 'cursor-pointer' : ''}`}
+                style={{
+                  background: 'rgba(255,255,255,0.85)',
+                  border: '1px solid var(--border)',
+                  boxShadow: '0 2px 16px var(--shadow)',
+                  transition: 'all 0.3s cubic-bezier(0.4,0,0.2,1)',
+                  backdropFilter: 'blur(8px)',
+                }}
+                onMouseOver={e => {
+                  e.currentTarget.style.borderColor = 'var(--accent)';
+                  e.currentTarget.style.boxShadow = '0 16px 48px rgba(37,99,235,0.16)';
+                }}
+                onMouseOut={e => {
+                  e.currentTarget.style.borderColor = 'var(--border)';
+                  e.currentTarget.style.boxShadow = '0 2px 16px var(--shadow)';
+                }}
+              >
+                {p.image ? (
+                  <div className="h-56 w-full border-b border-gray-100/10 flex items-center justify-center p-5" style={{ background: p.iconBg || '#f8fafc' }}>
+                    <img
+                      src={p.image}
+                      alt={p.title}
+                      className={`w-full h-full ${p.imageFit === 'contain' ? 'object-contain object-center mix-blend-multiply scale-110' : 'object-cover object-top rounded-lg shadow-[0_4px_20px_rgba(0,0,0,0.08)] border border-black/5'}`}
+                    />
+                  </div>
+                ) : (
+                  <div className="py-10 flex items-center justify-center" style={{ background: p.iconBg }}>
+                    <span style={{ color: p.iconColor, opacity: 0.4 }}>{p.icon}</span>
+                  </div>
+                )}
+                <div className="p-6">
+                  <span className="tag mb-3 inline-block">{p.badge}</span>
+                  <h3 className="text-xl font-black mb-2" style={{ color: 'var(--text-primary)' }}>{p.title}</h3>
+                  <p className="text-sm leading-relaxed mb-4" style={{ color: 'var(--text-secondary)', lineHeight: 1.7 }}>{p.desc}</p>
+                  {p.bullets.length > 0 && (
+                    <ul className="space-y-1.5 mb-4 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                      {p.bullets.map(b => (
+                        <li key={b} className="flex gap-2 items-center">
+                          <ChevronRight size={12} style={{ color: 'var(--accent)', flexShrink: 0 }} />{b}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  <div className="flex gap-2 flex-wrap">
+                    {p.tags.map(t => <span key={t} className="tag">{t}</span>)}
+                  </div>
+                </div>
+              </motion.div>
+            )
+          })}
+
+          {/* ════ Personal Portfolio — full width ════ */}
+          <motion.a
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+            viewport={{ once: true }}
+            whileHover={{ y: -4 }}
+            className="lg:col-span-2 rounded-2xl overflow-hidden relative cursor-pointer block"
+            style={{
+              background: 'rgba(255,255,255,0.85)',
+              border: '1px solid var(--border)',
+              boxShadow: '0 2px 16px var(--shadow)',
+              transition: 'all 0.3s cubic-bezier(0.4,0,0.2,1)',
+              backdropFilter: 'blur(8px)',
+            }}
+            onMouseOver={e => {
+              e.currentTarget.style.borderColor = 'var(--accent)';
+              e.currentTarget.style.boxShadow = '0 16px 48px rgba(37,99,235,0.16)';
+            }}
+            onMouseOut={e => {
+              e.currentTarget.style.borderColor = 'var(--border)';
+              e.currentTarget.style.boxShadow = '0 2px 16px var(--shadow)';
+            }}
+          >
+            <div className="flex flex-col md:flex-row h-full">
+              <div className="md:w-1/2 p-6 md:p-10 flex items-center justify-center border-b md:border-b-0 md:border-r border-gray-100/10"
+                style={{ background: 'linear-gradient(135deg, #F5F3FF, #EDE9FE)' }}>
+                <img src="/portfolio-thumb.png" alt="Portfolio UI" className="w-full h-full object-cover object-left-top rounded-xl shadow-[0_8px_30px_rgba(139,92,246,0.15)] border border-black/5" />
+              </div>
+              <div className="p-8 md:w-1/2 flex flex-col justify-center">
+                <span className="tag mb-4 inline-block self-start" style={{ background: 'rgba(139,92,246,0.15)', color: '#8b5cf6' }}>Frontend & UI/UX</span>
+                <h3 className="text-2xl font-black mb-3" style={{ color: 'var(--text-primary)' }}>
+                  Personal Portfolio
+                </h3>
+                <p className="text-sm leading-relaxed mb-6" style={{ color: 'var(--text-secondary)', lineHeight: 1.8 }}>
+                  A highly-optimized, modern developer portfolio built to showcase technical expertise. Features premium styling with Tailwind CSS,
+                  fluid interactive animations with Framer Motion, and a secure serverless contact pipeline integrated directly with Telegram.
+                </p>
+                <div className="flex gap-2 flex-wrap mb-4">
+                  <span className="tag" style={{ background: 'transparent', border: '1px solid var(--border)' }}>React</span>
+                  <span className="tag" style={{ background: 'transparent', border: '1px solid var(--border)' }}>Tailwind CSS</span>
+                  <span className="tag" style={{ background: 'transparent', border: '1px solid var(--border)' }}>Framer Motion</span>
+                  <span className="tag" style={{ background: 'transparent', border: '1px solid var(--border)' }}>Node.js</span>
+                </div>
+              </div>
+            </div>
+          </motion.a>
+
+          {/* CRM — full width */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+            viewport={{ once: true }}
+            whileHover={{ y: -4 }}
+            className="lg:col-span-2 rounded-2xl overflow-hidden"
+            style={{
+              background: 'rgba(255,255,255,0.85)',
+              border: '1px solid var(--border)',
+              boxShadow: '0 2px 16px var(--shadow)',
+              transition: 'all 0.3s cubic-bezier(0.4,0,0.2,1)',
+              backdropFilter: 'blur(8px)',
+            }}
+            onMouseOver={e => {
+              e.currentTarget.style.borderColor = 'var(--accent)';
+              e.currentTarget.style.boxShadow = '0 16px 48px rgba(37,99,235,0.16)';
+            }}
+            onMouseOut={e => {
+              e.currentTarget.style.borderColor = 'var(--border)';
+              e.currentTarget.style.boxShadow = '0 2px 16px var(--shadow)';
+            }}
+          >
+            <div className="flex flex-col md:flex-row h-full">
+              <div className="md:w-1/2 p-6 md:p-10 flex items-center justify-center border-b md:border-b-0 md:border-r border-gray-100/10"
+                style={{ background: 'linear-gradient(135deg, #EFF6FF, #DBEAFE)' }}>
+                <img src="/crm.png" alt="CRM Dashboard" className="w-full h-full object-cover object-left-top rounded-xl shadow-[0_8px_30px_rgba(37,99,235,0.15)] border border-black/5" />
+              </div>
+              <div className="p-8 md:w-1/2 flex flex-col justify-center">
+                <span className="tag mb-4 inline-block">Corporate Solution</span>
+                <h3 className="text-2xl font-black mb-3" style={{ color: 'var(--text-primary)' }}>
+                  Customer Relationship Website (CRM)
+                </h3>
+                <p className="text-sm leading-relaxed mb-5" style={{ color: 'var(--text-secondary)', lineHeight: 1.75 }}>
+                  High-performance CRM platform to streamline customer management, sales workflows, and business analytics with a clean, modern UI.
+                </p>
+                <div className="flex gap-2 flex-wrap">
+                  <span className="tag">HTML5</span>
+                  <span className="tag">Tailwind</span>
+                  <span className="tag">JavaScript</span>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </Section>
+
+      {/* ════ ACHIEVEMENTS ════ */}
+      <Section id="achievements" title="Success Metrics" >
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[
+            {
+              label: 'LeetCode Solved Problems', value: '200+', sub: 'Medium / Hard Focus',
+              color: 'var(--accent)', icon: <LeetCodeIcon size={28} />,
+              glow: 'rgba(37,99,235,0.12)',
+            },
+            {
+              label: 'Java Rating', value: '5 ★', sub: 'Gold Badge @ HackerRank',
+              color: '#F59E0B', icon: <HackerRankIcon size={28} />,
+              glow: 'rgba(245,158,11,0.12)',
+            },
+            {
+              label: 'SQL Rating', value: '3 ★', sub: 'Silver Badge @ HackerRank',
+              color: 'var(--success)', icon: <Terminal size={28} />,
+              glow: 'rgba(5,150,105,0.12)',
+            },
+          ].map((s, i) => (
+            <motion.div key={i}
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ delay: i * 0.1, duration: 0.5 }}
+              viewport={{ once: true }}
+              className="stat-card">
+              <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5"
+                style={{ background: `radial-gradient(circle, ${s.glow}, transparent)`, color: s.color, border: `1px solid ${s.glow.replace('0.12', '0.3')}` }}>
+                {s.icon}
+              </div>
+              <div className="text-[11px] uppercase tracking-widest mb-3" style={{ color: 'var(--text-secondary)' }}>{s.label}</div>
+              <div className="text-5xl font-black mb-2" style={{ color: s.color }}>{s.value}</div>
+              <div className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>{s.sub}</div>
+            </motion.div>
+          ))}
+        </div>
+      </Section>
+
+      {/* ════ EDUCATION ════ */}
+      <Section id="education" title="Education" alt >
+        <div className="grid md:grid-cols-2 gap-5">
+          {[
+            { deg: 'Master of Computer Applications', period: 'Pimpri Chinchwad College of Engineering Pune · 2025 – 2027', grade: 'SGPA: 8.2', primary: true },
+            { deg: 'B.Sc Computer Science', period: 'MGMs College of CS And IT Nanded · 2021–2024', grade: 'CGPA: 8.22', primary: false },
+            { deg: 'HSC', period: 'SSGM College Loha · 2020-2021', grade: 'Percentage: 81.17%', primary: false },
+            { deg: 'SSC', period: 'Prataprao Patil Madhyamik Vidyalay Harsad Pati · 2018-2019', grade: 'Percentage: 70.80%', primary: false },
+          ].map((e, i) => (
+            <motion.div key={i}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.12, duration: 0.5 }}
+              viewport={{ once: true }}
+              className="p-7 rounded-2xl flex items-start gap-5"
+              style={{
+                background: 'rgba(255,255,255,0.8)',
+                border: '1px solid var(--border)',
+                boxShadow: '0 2px 12px var(--shadow)',
+                backdropFilter: 'blur(8px)',
+                transition: 'all 0.25s ease',
+              }}
+              onMouseOver={ev => {
+                ev.currentTarget.style.borderColor = 'var(--accent)';
+                ev.currentTarget.style.transform = 'translateY(-3px)';
+                ev.currentTarget.style.boxShadow = '0 12px 32px rgba(37,99,235,0.12)';
+              }}
+              onMouseOut={ev => {
+                ev.currentTarget.style.borderColor = 'var(--border)';
+                ev.currentTarget.style.transform = 'translateY(0)';
+                ev.currentTarget.style.boxShadow = '0 2px 12px var(--shadow)';
+              }}
+            >
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
+                style={{ background: e.primary ? 'linear-gradient(135deg, #EFF6FF, #DBEAFE)' : 'var(--bg-primary)', color: e.primary ? 'var(--accent)' : 'var(--text-secondary)' }}>
+                <GraduationCap size={24} />
+              </div>
+              <div>
+                <h3 className="font-bold mb-1" style={{ color: 'var(--text-primary)' }}>{e.deg}</h3>
+                <p className="text-sm mb-3" style={{ color: e.primary ? 'var(--accent)' : 'var(--text-secondary)' }}>{e.period}</p>
+                <span className="tag">{e.grade}</span>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </Section>
+
+      {/* ════ CONTACT ════ */}
+      <Section id="contact" title="Get In Touch" >
+        <div className="grid lg:grid-cols-2 gap-12">
+          <div>
+            <h3 className="text-2xl font-black mb-4 leading-snug" style={{ color: 'var(--text-primary)' }}>
+              Let's build something <span style={{ color: 'var(--accent)' }}>extraordinary</span>.
+            </h3>
+            <p className="text-sm mb-8 leading-relaxed" style={{ color: 'var(--text-secondary)', lineHeight: 1.8 }}>
+              Open to roles in AI integration, secure system design, and product-focused software engineering.
+              Let's connect and create intelligent solutions together.
+            </p>
+
+            <div className="space-y-4 mb-8">
+              {[
+                { icon: <Mail size={16} />, label: 'Email', val: 'ladanejagannath@gmail.com' },
+                { icon: <Phone size={16} />, label: 'Phone', val: '+91 9022301782' },
+              ].map(c => (
+                <div key={c.label} className="flex items-center gap-4">
+                  <div className="social-icon" style={{ width: 44, height: 44, borderRadius: 10 }}>{c.icon}</div>
+                  <div>
+                    <div className="text-[10px] uppercase tracking-wider mb-0.5" style={{ color: 'var(--text-secondary)' }}>{c.label}</div>
+                    <div className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>{c.val}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex gap-3 pt-5" style={{ borderTop: '1px solid var(--border)' }}>
+              <a href="https://github.com/ladane-lab" target="_blank" rel="noopener noreferrer" className="social-icon" title="GitHub"><GitHubIcon size={17} /></a>
+              <a href="https://www.linkedin.com/in/jagannath-ladane/" target="_blank" rel="noopener noreferrer" className="social-icon" title="LinkedIn"><LinkedInIcon size={17} /></a>
+              <a href="https://leetcode.com/u/ladane-lab/" target="_blank" rel="noopener noreferrer" className="social-icon" title="LeetCode"><LeetCodeIcon size={17} /></a>
+              <a href="https://www.hackerrank.com/profile/ladanejagannath" target="_blank" rel="noopener noreferrer" className="social-icon" title="HackerRank"><HackerRankIcon size={17} /></a>
+            </div>
+          </div>
+
+          <ContactForm />
+        </div>
+      </Section>
+
+      {/* ════ FOOTER ════ */}
+      <footer style={{
+        background: 'linear-gradient(to bottom, #0f172a, #020617)',
+        color: '#94a3b8',
+        borderTop: '1px solid rgba(37,99,235,0.15)',
+        boxShadow: '0 -10px 40px rgba(0,0,0,0.1)'
+      }} className="py-16 px-6 relative overflow-hidden" >
+        {/* Decorative top glow */}
+        < div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-[1px]" style={{ background: 'linear-gradient(90deg, transparent, var(--accent), transparent)', opacity: 0.5 }} />
+
+        < div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 relative z-10" >
+          <div className="text-center md:text-left">
+            <div className="text-3xl font-black text-white mb-2 tracking-tight">
+              JL<span style={{ color: 'var(--accent)' }}>.</span>
+            </div>
+            <div className="text-sm font-medium" style={{ color: '#cbd5e1' }}>MCA Student & AI Developer</div>
+          </div>
+          <div className="flex gap-5">
+            {[
+              { href: "https://github.com/ladane-lab", icon: <GitHubIcon size={20} />, label: "GitHub" },
+              { href: "https://www.linkedin.com/in/jagannath-ladane/", icon: <LinkedInIcon size={20} />, label: "LinkedIn" },
+              { href: "https://leetcode.com/u/ladane-lab/", icon: <LeetCodeIcon size={20} />, label: "LeetCode" },
+              { href: "https://www.hackerrank.com/profile/ladanejagannath", icon: <HackerRankIcon size={20} />, label: "HackerRank" }
+            ].map((link, idx) => (
+              <a key={idx} href={link.href} target="_blank" rel="noopener noreferrer"
+                className="footer-social-icon" title={link.label}
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  width: 44, height: 44, borderRadius: '50%',
+                  background: 'rgba(255,255,255,0.05)', color: '#94a3b8',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseOver={e => {
+                  e.currentTarget.style.background = 'var(--accent)';
+                  e.currentTarget.style.color = '#ffffff';
+                  e.currentTarget.style.boxShadow = '0 0 20px rgba(37,99,235,0.5)';
+                  e.currentTarget.style.transform = 'translateY(-3px)';
+                }}
+                onMouseOut={e => {
+                  e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+                  e.currentTarget.style.color = '#94a3b8';
+                  e.currentTarget.style.boxShadow = 'none';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
+              >
+                {link.icon}
+              </a>
+            ))}
+          </div>
+          <div className="text-xs font-bold uppercase tracking-widest" style={{ color: '#64748b' }}>© 2026 Jagannath Ladane</div>
+        </div>
+      </footer>
+      {/* PeekSathi Gallery Modal */}
+      <AnimatePresence>
+        {showPeekSathiGallery && (
+          <ImageGallery onClose={() => setShowPeekSathiGallery(false)} />
+        )}
+      </AnimatePresence>
+
+    </div>
+  );
+};
 
 export default App;
 
