@@ -99,9 +99,9 @@ const Navbar = () => {
       boxShadow: scrolled ? '0 4px 24px rgba(15,23,42,0.08)' : 'none',
       transition: 'all 0.3s ease',
     }}>
-      <div className="max-w-6xl mx-auto px-6 md:px-8 py-3.5 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-6 md:px-8 py-3.5 flex items-center justify-between">
         <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
-          className="text-xl font-black" style={{ color: 'var(--text-primary)' }}>
+          className="text-2xl font-black" style={{ color: 'var(--text-primary)' }}>
           JL<span style={{ color: 'var(--accent)' }}>.</span>
         </motion.div>
 
@@ -112,7 +112,7 @@ const Navbar = () => {
             const isActive = activeSection === id;
             return (
               <a key={item} href={`#${id}`}
-                className="text-sm font-semibold transition-all duration-200 relative"
+                className="text-sm md:text-base font-bold transition-all duration-200 relative tracking-wide"
                 style={{ color: isActive ? 'var(--accent)' : 'var(--text-secondary)' }}
                 onMouseOver={e => e.target.style.color = 'var(--accent)'}
                 onMouseOut={e => e.target.style.color = isActive ? 'var(--accent)' : 'var(--text-secondary)'}>
@@ -120,14 +120,14 @@ const Navbar = () => {
                 {isActive && (
                   <motion.span layoutId="nav-indicator" style={{
                     position: 'absolute', bottom: -6, left: 0, right: 0,
-                    height: 2, background: 'var(--accent)', borderRadius: 2
+                    height: 3, background: 'var(--accent)', borderRadius: 2
                   }} />
                 )}
               </a>
             );
           })}
-          <a href="mailto:ladanejagannath@gmail.com?subject=Job Opportunity: Hiring Inquiry" className="primary-btn"
-            style={{ padding: '0.45rem 1.2rem', fontSize: '0.78rem', borderRadius: '8px' }}>
+          <a href="mailto:ladanejagannath@gmail.com?subject=Job Opportunity: Hiring Inquiry&body=Hi Jagannath,%0D%0A%0D%0AI came across your portfolio and would like to discuss a potential opportunity..." className="primary-btn"
+            style={{ padding: '0.45rem 1.2rem', fontSize: '0.78rem', borderRadius: '8px', minWidth: '110px', justifyContent: 'center' }}>
             HIRE ME
           </a>
         </div>
@@ -154,7 +154,7 @@ const Navbar = () => {
             className="md:hidden overflow-hidden"
             style={{ background: 'rgba(248,250,252,0.98)', borderBottom: '1px solid var(--border)' }}
           >
-            <div className="flex flex-col gap-4 p-6">
+            <div className="flex flex-col gap-6 p-8">
               {navItems.map(item => {
                 const id = item.toLowerCase();
                 const isActive = activeSection === id;
@@ -178,10 +178,10 @@ const Navbar = () => {
                   </a>
                 );
               })}
-              <a href="mailto:ladanejagannath@gmail.com?subject=Job Opportunity: Hiring Inquiry"
+              <a href="mailto:ladanejagannath@gmail.com?subject=Job Opportunity: Hiring Inquiry&body=Hi Jagannath,%0D%0A%0D%0AI came across your portfolio and would like to discuss a potential opportunity..."
                 onClick={() => setIsMenuOpen(false)}
                 className="primary-btn w-full justify-center"
-                style={{ padding: '0.75rem', fontSize: '0.9rem', borderRadius: '10px' }}>
+                style={{ padding: '1rem', fontSize: '1rem', borderRadius: '12px' }}>
                 HIRE ME
               </a>
             </div>
@@ -202,10 +202,13 @@ const Section = ({ id, title, children, alt = false }) => (
     viewport={{ once: true, margin: '-60px' }}
     style={{ background: alt ? 'rgba(255,255,255,0.55)' : 'transparent', backdropFilter: alt ? 'blur(6px)' : 'none' }}
   >
-    <div className="py-16 md:py-24 px-6 md:px-8 max-w-6xl mx-auto">
+    <div className="py-12 md:py-24 px-6 md:px-8 max-w-7xl mx-auto">
       <div className="flex items-center gap-4 mb-12 md:mb-16">
-        <h2 className="text-xl md:text-3xl font-extrabold uppercase tracking-widest whitespace-nowrap"
-          style={{ color: 'var(--text-primary)' }}>
+        <h2 className="font-black uppercase tracking-[0.15em]"
+          style={{
+            fontSize: 'clamp(1.2rem, 4vw, 2.2rem)',
+            color: 'var(--text-primary)'
+          }}>
           {title}
         </h2>
         <div className="section-line" />
@@ -550,7 +553,7 @@ const ImageGallery = ({ onClose }) => {
 
       {/* Thumbnail Grid */}
       <div className="flex-1 overflow-y-auto p-6">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 max-w-6xl mx-auto">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 max-w-7xl mx-auto">
           {PEEKSATHI_IMAGES.map((src, idx) => (
             <motion.div
               key={idx}
@@ -651,23 +654,39 @@ const App = () => {
 
       {/* ════ HERO ════ */}
       <section>
-        <div className="max-w-6xl mx-auto px-6 py-16 md:py-24">
+        <div className="max-w-7xl mx-auto px-6 py-16 md:py-24">
           <div className="grid md:grid-cols-2 gap-12 items-center">
 
             {/* LEFT — text */}
-            <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.75, ease: [0.4, 0, 0.2, 1] }}>
+            <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.75, ease: [0.4, 0, 0.2, 1] }}
+              className="text-center md:text-left flex flex-col items-center md:items-start">
 
 
-              <h1 className="font-black leading-[1.05] mb-4"
-                style={{ fontFamily: '"Poppins", sans-serif', fontSize: 'clamp(1.4rem, 8.5vw, 4.2rem)', color: 'var(--text-primary)', letterSpacing: '-0.03em', whiteSpace: 'nowrap' }}>
+              <h1 className="font-black leading-[1.1] mb-6"
+                style={{
+                  fontFamily: '"Plus Jakarta Sans", sans-serif',
+                  fontSize: 'clamp(2.2rem, 9vw, 5.2rem)',
+                  color: 'var(--text-primary)',
+                  letterSpacing: '-0.04em',
+                  whiteSpace: 'nowrap'
+                }}>
                 Jagannath <span className="name-gradient">Ladane</span>
               </h1>
 
-              <p className="font-bold mb-2" style={{ fontSize: '1.05rem', color: 'var(--text-secondary)' }}>
+              <p className="font-bold mb-4 tracking-tight"
+                style={{
+                  fontSize: 'clamp(1.1rem, 3vw, 1.6rem)',
+                  color: 'var(--text-secondary)',
+                  opacity: 0.9
+                }}>
                 MCA Student &amp; AI Developer
               </p>
 
-              <div className="text-lg md:text-xl font-medium mb-5 h-8" style={{ color: 'var(--text-secondary)' }}>
+              <div className="font-semibold mb-8 h-10"
+                style={{
+                  fontSize: 'clamp(1.1rem, 2.5vw, 1.8rem)',
+                  color: 'var(--accent)'
+                }}>
                 <TypewriterText texts={[
                   'Building Intelligent Software Solutions',
                   'Secure System Design',
@@ -676,15 +695,19 @@ const App = () => {
                 ]} />
               </div>
 
-              <p className="text-sm leading-relaxed mb-8 max-w-md" style={{ color: 'var(--text-secondary)', lineHeight: '1.75' }}>
+              <p className="mb-10 max-w-2xl"
+                style={{
+                  fontSize: 'clamp(0.95rem, 1.8vw, 1.15rem)',
+                  color: 'var(--text-secondary)',
+                  lineHeight: '1.8'
+                }}>
                 I build <span className="font-semibold" style={{ color: 'var(--text-primary)' }}>scalable, intelligent applications</span> that solve
                 real-world problems. Specialising in AI-driven products and security-first architecture. MCA at PCCOE Pune.
               </p>
 
-              {/* CTA buttons */}
-              <div className="flex flex-nowrap gap-2 md:gap-4 mb-10">
+              <div className="flex flex-wrap justify-center md:justify-start gap-2 md:gap-4 mb-10">
                 <a href="#projects" className="primary-btn"
-                  style={{ padding: '0.6rem 1rem', fontSize: '0.8rem' }}
+                  style={{ padding: '0.8rem 1.5rem', fontSize: '0.95rem', minWidth: '200px', justifyContent: 'center' }}
                   onClick={(e) => {
                     e.preventDefault();
                     const el = document.getElementById('projects');
@@ -694,25 +717,25 @@ const App = () => {
                       window.scrollTo({ top: y, behavior: 'smooth' });
                     }
                   }}>
-                  <Zap size={14} /> <span className="whitespace-nowrap">View Projects</span>
+                  <Zap size={18} /> <span className="whitespace-nowrap">View Projects</span>
                 </a>
                 <a href="/resume.pdf" download="jagannath_ladane_resume.pdf" className="ghost-btn"
-                  style={{ padding: '0.6rem 1rem', fontSize: '0.8rem' }}>
-                  <Download size={14} /> <span className="whitespace-nowrap">Download Resume</span>
+                  style={{ padding: '0.8rem 1.5rem', fontSize: '0.95rem', minWidth: '200px', justifyContent: 'center' }}>
+                  <Download size={18} /> <span className="whitespace-nowrap">Download Resume</span>
                 </a>
               </div>
 
               {/* inline stats with icons */}
-              <div className="grid grid-cols-3 gap-2 md:gap-3">
+              <div className="grid grid-cols-3 gap-2 md:gap-4">
                 {[
-                  { value: '200+', label: 'DSA Problems Solved', icon: <Code2 size={16} />, color: 'var(--accent)' },
-                  { value: '5 ★', label: 'Java @ HackerRank', icon: <Star size={16} />, color: '#F59E0B' },
-                  { value: '2+', label: 'Yrs Experience in Project Development', icon: <Clock size={16} />, color: 'var(--success)' },
+                  { value: '200+', label: 'DSA Problems Solved', icon: <Code2 size={20} />, color: 'var(--accent)' },
+                  { value: '5 ★', label: 'Java @ HackerRank', icon: <Star size={20} />, color: '#F59E0B' },
+                  { value: '2+', label: 'Yrs Experience in Project Development', icon: <Clock size={20} />, color: 'var(--success)' },
                 ].map(s => (
                   <div key={s.label} className="hero-stat">
-                    <div className="flex justify-center mb-1" style={{ color: s.color }}>{s.icon}</div>
-                    <div className="text-lg md:text-xl font-black" style={{ color: s.color }}>{s.value}</div>
-                    <div className="text-[8px] md:text-[9px] uppercase tracking-wider mt-0.5 leading-tight" style={{ color: 'var(--text-secondary)' }}>{s.label}</div>
+                    <div className="flex justify-center mb-1.5" style={{ color: s.color }}>{s.icon}</div>
+                    <div className="text-xl md:text-2xl font-black" style={{ color: s.color }}>{s.value}</div>
+                    <div className="text-[9px] md:text-[11px] uppercase tracking-wider mt-1 leading-tight" style={{ color: 'var(--text-secondary)' }}>{s.label}</div>
                   </div>
                 ))}
               </div>
@@ -737,6 +760,7 @@ const App = () => {
                   position: 'relative', zIndex: 1,
                   borderRadius: '50%', overflow: 'hidden',
                   border: '4px solid rgba(255,255,255,0.9)',
+                  width: 'min(280px, 70vw)', height: 'min(280px, 70vw)',
                   boxShadow:
                     '0 20px 50px rgba(37, 99, 235, 0.25), 0 0 0 8px rgba(37, 99, 235, 0.08)',
                 }}>
@@ -778,21 +802,35 @@ const App = () => {
 
       {/* ════ ABOUT ════ */}
       <Section id="about" title="Professional Story" alt>
-        <div className="max-w-5xl mx-auto flex flex-col gap-12 items-center">
+        <div className="max-w-6xl mx-auto flex flex-col gap-12 items-center">
 
           {/* Headline + description */}
-          <div className="text-center max-w-3xl flex flex-col items-center">
-            <p className="text-xl md:text-2xl leading-relaxed mb-6" style={{ color: 'var(--text-primary)', lineHeight: 1.6 }}>
-              I'm a <span className="font-bold" style={{ color: 'var(--accent)' }}>product-minded Software Engineer Aspirant</span> who
-              bridges the gap between cutting-edge AI and real human problems.
+          <div className="text-center max-w-5xl flex flex-col items-center">
+            <p className="font-bold leading-snug mb-10"
+              style={{
+                fontSize: 'clamp(1.4rem, 4vw, 2.8rem)',
+                color: 'var(--text-primary)'
+              }}>
+              I'm a <span className="name-gradient">product-minded Software Engineer Aspirant</span> who
+              bridges the gap between AI and human problems.
             </p>
-            <p className="mb-8 leading-relaxed text-base" style={{ color: 'var(--text-secondary)', lineHeight: 1.8 }}>
+            <p className="mb-12"
+              style={{
+                fontSize: 'clamp(1rem, 2vw, 1.25rem)',
+                color: 'var(--text-secondary)',
+                lineHeight: '1.8'
+              }}>
               Currently pursuing MCA at PCCOE, I specialise in AI-driven applications and security-first design with
               a focus on scalability and exceptional user experience. From building intelligent farming assistants to
               military-grade encrypted diary platforms — I architect solutions that matter.
             </p>
-            <p className="text-sm italic font-medium px-6 py-3 rounded-full inline-block"
-              style={{ color: 'var(--accent)', background: 'rgba(37,99,235,0.05)', border: '1px solid rgba(37,99,235,0.15)' }}>
+            <p className="italic font-bold px-10 py-5 rounded-2xl inline-block"
+              style={{
+                fontSize: 'clamp(0.9rem, 1.8vw, 1.1rem)',
+                color: 'var(--accent)',
+                background: 'rgba(37,99,235,0.05)',
+                border: '1px solid rgba(37,99,235,0.15)'
+              }}>
               "I love building products that combine intelligence, security, and delightful user experiences."
             </p>
           </div>
@@ -842,14 +880,7 @@ const App = () => {
                 <p className="text-sm font-semibold mb-3" style={{ color: 'var(--text-secondary)' }}>
                   Ready to build something impactful?
                 </p>
-                <div className="flex flex-wrap gap-3">
-                  <a href="/resume.pdf" download="jagannath_ladane_resume.pdf" className="primary-btn">
-                    <Download size={15} /> Download Resume
-                  </a>
-                  <a href="#contact" className="ghost-btn">
-                    <MessageSquare size={15} /> Contact Me
-                  </a>
-                </div>
+
               </div>
             </div>
 
@@ -1180,9 +1211,9 @@ const App = () => {
                 style={{ background: `radial-gradient(circle, ${s.glow}, transparent)`, color: s.color, border: `1px solid ${s.glow.replace('0.12', '0.3')}` }}>
                 {s.icon}
               </div>
-              <div className="text-[11px] uppercase tracking-widest mb-3" style={{ color: 'var(--text-secondary)' }}>{s.label}</div>
-              <div className="text-5xl font-black mb-2" style={{ color: s.color }}>{s.value}</div>
-              <div className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>{s.sub}</div>
+              <div className="text-[12px] uppercase tracking-widest mb-3" style={{ color: 'var(--text-secondary)' }}>{s.label}</div>
+              <div className="text-6xl font-black mb-3" style={{ color: s.color }}>{s.value}</div>
+              <div className="text-base font-semibold" style={{ color: 'var(--text-secondary)' }}>{s.sub}</div>
             </motion.div>
           ))}
         </div>
@@ -1226,9 +1257,9 @@ const App = () => {
                 <GraduationCap size={24} />
               </div>
               <div>
-                <h3 className="font-bold mb-1" style={{ color: 'var(--text-primary)' }}>{e.deg}</h3>
-                <p className="text-sm mb-3" style={{ color: e.primary ? 'var(--accent)' : 'var(--text-secondary)' }}>{e.period}</p>
-                <span className="tag">{e.grade}</span>
+                <h3 className="text-xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>{e.deg}</h3>
+                <p className="text-base mb-4" style={{ color: e.primary ? 'var(--accent)' : 'var(--text-secondary)' }}>{e.period}</p>
+                <span className="tag text-sm px-4 py-1.5">{e.grade}</span>
               </div>
             </motion.div>
           ))}
@@ -1255,8 +1286,8 @@ const App = () => {
                 <div key={c.label} className="flex items-center gap-4">
                   <div className="social-icon" style={{ width: 44, height: 44, borderRadius: 10 }}>{c.icon}</div>
                   <div>
-                    <div className="text-[10px] uppercase tracking-wider mb-0.5" style={{ color: 'var(--text-secondary)' }}>{c.label}</div>
-                    <div className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>{c.val}</div>
+                    <div className="text-[12px] uppercase tracking-wider mb-1" style={{ color: 'var(--text-secondary)' }}>{c.label}</div>
+                    <div className="font-bold text-base" style={{ color: 'var(--text-primary)' }}>{c.val}</div>
                   </div>
                 </div>
               ))}
@@ -1284,7 +1315,7 @@ const App = () => {
         {/* Decorative top glow */}
         < div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-[1px]" style={{ background: 'linear-gradient(90deg, transparent, var(--accent), transparent)', opacity: 0.5 }} />
 
-        < div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 relative z-10" >
+        < div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 relative z-10" >
           <div className="text-center md:text-left">
             <div className="text-3xl font-black text-white mb-2 tracking-tight">
               JL<span style={{ color: 'var(--accent)' }}>.</span>
